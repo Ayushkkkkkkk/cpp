@@ -128,19 +128,19 @@ template<typename T, typename U> void umax(T& a, U b) {if (a < b) a = b;}
 
 int n , m;
 
-bool check (int mid , vector<vector<int>> a){
+bool check (int mid , vector<vector<int>> a) {
 	vector<vector<int>> pre(n + 1 , vector<int>(m + 1));
-	for (int i = 0 ; i < n ; i++){
-		for (int j = 0 ; j < m ; j++){
-			if(a[i][j] >= mid) a[i][j] = 1;
+	for (int i = 0 ; i < n ; i++) {
+		for (int j = 0 ; j < m ; j++) {
+			if (a[i][j] >= mid) a[i][j] = 1;
 			else a[i][j] = 0;
 			pre[i + 1][j + 1] = pre[i][j + 1] + pre[i + 1][j] - pre[i][j] + a[i][j];
 		}
 	}
-	for (int i = mid ; i < n + 1 ; i++){
-		for (int j = mid ; j < m + 1 ; j++){
+	for (int i = mid ; i < n + 1 ; i++) {
+		for (int j = mid ; j < m + 1 ; j++) {
 			int sum = pre[i][j] - pre[i][j + 1] + pre[i + 1][j] - pre[i][j] + a[i][j];
-			if(sum == mid * mid){
+			if (sum == mid * mid) {
 				return true;
 			}
 		}
@@ -152,24 +152,24 @@ bool check (int mid , vector<vector<int>> a){
 void test() {
 	cin >> n >> m ;
 	vector<vector<int>> a(n , vector<int>(m));
-	for (int i = 0 ; i < n ; i++){
-		for (int j = 0 ; j < m ; j++){
+	for (int i = 0 ; i < n ; i++) {
+		for (int j = 0 ; j < m ; j++) {
 			cin >> a[i][j];
 		}
 	}
 	int l = 0 , r = min(n , m) , ans;
-	while(l <= r){
+	while (l <= r) {
 		int mid = (l + r) / 2;
-		if(check(mid , a)){
+		if (check(mid , a)) {
 			ans = mid;
 			l = mid + 1;
 		}
-		else{
+		else {
 			r = mid - 1;
 		}
 	}
 	cout << ans << nline;
-	
+
 }
 
 int32_t main() {

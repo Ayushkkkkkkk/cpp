@@ -3,7 +3,7 @@
 #include<ext/pb_ds/tree_policy.hpp>
 using namespace std;
 using namespace __gnu_pbds;
- 
+
 #define fastio() ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL)
 #define ll long long int
 #define mod 1000000007
@@ -27,9 +27,9 @@ using namespace __gnu_pbds;
 #define pll pair<ll,ll>
 #define Vpii vector<pii>
 #define VVpii vector<Vpii>
-#define Vpll vector<pll> 
+#define Vpll vector<pll>
 #define VVpll vector<Vpll>
- 
+
 int n, m;
 bool check(int mid, VV a)
 {
@@ -55,13 +55,13 @@ bool check(int mid, VV a)
 }
 void solve()
 {
-    cin>>n>>m;
-    VV a(n,V(m));
-    rep(i,0,n)
+    cin >> n >> m;
+    VV a(n, V(m));
+    rep(i, 0, n)
     {
-        rep(j,0,m)
+        rep(j, 0, m)
         {
-            cin>>a[i][j];
+            cin >> a[i][j];
         }
     }
     int l = 0, r = min(n, m), ans;
@@ -82,12 +82,12 @@ int main() {
     fastio();
     // freopen("output.in", "r", stdin);
     // freopen("output.out", "w", stdout);
- 
+
     int tt = 1;
-    cin>>tt;
+    cin >> tt;
     rep(ii, 1, tt + 1)
     {
         solve();
-    }       
+    }
     return 0;
 }
