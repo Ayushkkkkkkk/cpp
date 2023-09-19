@@ -22,7 +22,7 @@ int phi(int n){
 	}
 	if(n > 1)
 		res /= n  , res *= (n - 1);
-	return resl
+	return res;
 }
 
 void solve() {

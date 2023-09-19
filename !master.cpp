@@ -4,7 +4,10 @@
 
 using namespace std;
 using namespace __gnu_pbds;
-//using namespace chrono;
+using namespace chrono;
+
+
+
 
 
 #define fastio() 		ios_base::sync_with_stdio(false);cin.tie(nullptr);cout.tie(nullptr)
@@ -24,7 +27,7 @@ using namespace __gnu_pbds;
 #define upper(s1) 		transform(s1.begin(), s1.end(), s1.begin(), ::toupper);
 #define getunique(v) 	{sort(all(v)); v.erase(unique(all(v)), v.end());}
 #define vt vector
-#define decimal 		cout << fixed << setprecision(15) ;
+#define decimal 		cout << fixed << setprecision(6) ;
 #define W(t)        	while(t--)
 
 
@@ -85,23 +88,6 @@ template <class T, class V> void _print(unordered_map <T, V> v) {cerr << "[ "; f
 template <class T> 			void _print(unordered_set <T> v) 	{cerr << "[ "; for (T i : v) 	{_print(i); cerr << " ";} 	cerr << "]";}
 
 
-#ifndef ONLINE_JUDGE
-#define debug(x) cerr << #x <<" "; _print(x); cerr << endl;
-#else
-#define debug(x)
-#endif
-
-#define int long long
-
-#define sum(a)     	( accumulate ((a).begin(), (a).end(), 0ll))
-#define mine(a)    	(*min_element((a).begin(), (a).end()))
-#define maxe(a)    	(*max_element((a).begin(), (a).end()))
-#define miniA(a)    ( min_element((a).begin(), (a).end()) - (a).begin())
-#define maxiA(a)    ( max_element((a).begin(), (a).end()) - (a).begin())
-#define lowb(a, x) 	( lower_bound((a).begin(), (a).end(), (x)) - (a).begin())
-#define uppb(a, x) 	( upper_bound((a).begin(), (a).end(), (x)) - (a).begin())
-
-
 template<typename T>             vector<T>& operator--            (vector<T> &v) {for (auto& i : v) --i;            return  v;}
 template<typename T>             vector<T>& operator++            (vector<T> &v) {for (auto& i : v) ++i;            return  v;}
 template<typename T>             istream& operator>>(istream& is,  vector<T> &v) {for (auto& i : v) is >> i;        return is;}
@@ -116,66 +102,53 @@ template<typename T, typename U> void umin(T& a, U b) {if (a > b) a = b;}
 template<typename T, typename U> void umax(T& a, U b) {if (a < b) a = b;}
 
 
+
+#ifndef ONLINE_JUDGE
+#define debug(x) cerr << #x <<" "; _print(x); cerr << endl;
+#else
+#define debug(x)
+#endif
+
+#define int long long
+
+
+#define sum(a)     	( accumulate ((a).begin(), (a).end(), 0ll))
+#define mine(a)    	(*min_element((a).begin(), (a).end()))
+#define maxe(a)    	(*max_element((a).begin(), (a).end()))
+#define miniA(a)    ( min_element((a).begin(), (a).end()) - (a).begin())
+#define maxiA(a)    ( max_element((a).begin(), (a).end()) - (a).begin())
+#define lowb(a, x) 	( lower_bound((a).begin(), (a).end(), (x)) - (a).begin())
+#define uppb(a, x) 	( upper_bound((a).begin(), (a).end(), (x)) - (a).begin())
+
+
 #define F_OR(i, a, b, s) 			for (int i=(a); (s)>0?i<(b):i>(b); i+=(s))
 #define F_OR1(e) 					F_OR(i, 0, e, 1)
 #define F_OR2(i, e) 				F_OR(i, 0, e, 1)
 #define F_OR3(i, b, e) 				F_OR(i, b, e, 1)
 #define F_OR4(i, b, e, s) 			F_OR(i, b, e, s)
 #define GET5(a, b, c, d, e, ...) 	e
-#define F_ORC(...) 					GET5(__VA_ARGS__, F_OR4, F_OR3, F_OR2, F_OR1)
-#define FOR(...) 					F_ORC(__VA_ARGS__)(__VA_ARGS__)
+#define F_ORC(...) 					GET5(_VA_ARGS_, F_OR4, F_OR3, F_OR2, F_OR1)
+#define FOR(...) 					F_ORC(_VA_ARGS_)(_VA_ARGS_)
 #define EACH(x, a) 					for (auto& x: a)
 
-int n , m;
 
-bool check (int mid , vector<vector<int>> a) {
-	vector<vector<int>> pre(n + 1 , vector<int>(m + 1));
-	for (int i = 0 ; i < n ; i++) {
-		for (int j = 0 ; j < m ; j++) {
-			if (a[i][j] >= mid) a[i][j] = 1;
-			else a[i][j] = 0;
-			pre[i + 1][j + 1] = pre[i][j + 1] + pre[i + 1][j] - pre[i][j] + a[i][j];
-		}
-	}
-	for (int i = mid ; i < n + 1 ; i++) {
-		for (int j = mid ; j < m + 1 ; j++) {
-			int sum = pre[i][j] - pre[i][j + 1] + pre[i + 1][j] - pre[i][j] + a[i][j];
-			if (sum == mid * mid) {
-				return true;
-			}
-		}
-	}
-	return false;
-}
 
 
 void test() {
-	cin >> n >> m ;
-	vector<vector<int>> a(n , vector<int>(m));
-	for (int i = 0 ; i < n ; i++) {
-		for (int j = 0 ; j < m ; j++) {
-			cin >> a[i][j];
-		}
-	}
-	int l = 0 , r = min(n , m) , ans;
-	while (l <= r) {
-		int mid = (l + r) / 2;
-		if (check(mid , a)) {
-			ans = mid;
-			l = mid + 1;
-		}
-		else {
-			r = mid - 1;
-		}
-	}
+	int n ; cin >> n;
+	vector<int> a(n);
+	cin >> a;
+	int ans = upper_bound(a.begin() , a.end() , 1000) - a.begin();
 	cout << ans << nline;
-
 }
+
 
 int32_t main() {
 	lnx();
-	int t ;  cin >> t;
-	while (t--) {
+	int t; cin >> t;
+	W(t) {
 		test();
 	}
 }
+
+
