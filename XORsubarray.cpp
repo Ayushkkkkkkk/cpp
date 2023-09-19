@@ -73,5 +73,5 @@ int main()
     }
     int64_t b ; cin >> b;
     Solve s;
-    cout << s.test(a , b) << nline;
+    cout << s.test(a , b) << endl;
 }
