@@ -133,14 +133,27 @@ template<typename T, typename U> void umax(T& a, U b) {if (a < b) a = b;}
 
 
 
+const int N = 100100;
+int n  , a[N] , pos[N];
 
 void test() {
-	int n ; cin >> n;
-	vector<int> a(n);
-	cin >> a;
-	int ans = upper_bound(a.begin() , a.end() , 1000) - a.begin();
-	cout << ans << nline;
+	cin >> n ;
+	for (int i=  0 ; i < n ; i++){
+		cin >> a[i];
+		pos[a[i]] = i;
+	}
+	int r = n;
+	for (int x = n ; x > 0 ; x--){
+		if(pos[x] >= r)
+			continue;
+		for (int i = pos[x] ; i < r ; i++){
+			cout << a[i] << " ";
+		}
+		r = pos[x];
+	}
+	cout << nline;
 }
+
 
 
 int32_t main() {
