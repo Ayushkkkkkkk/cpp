@@ -132,33 +132,48 @@ template<typename T, typename U> void umax(T& a, U b) {if (a < b) a = b;}
 #define EACH(x, a) 					for (auto& x: a)
 
 
+const int N = 27;
 
-const int N = 100100;
-int n  , a[N] , pos[N];
+
 
 void test() {
-	cin >> n ;
-	for (int i=  0 ; i < n ; i++){
-		cin >> a[i];
-		pos[a[i]] = i;
-	}
-	int r = n;
-	for (int x = n ; x > 0 ; x--){
-		if(pos[x] >= r)
-			continue;
-		for (int i = pos[x] ; i < r ; i++){
-			cout << a[i] << " ";
+	int n , m ; cin >> n >> m ;
+	string s , t ; cin >> s >> t;
+
+
+	bool first = true;
+	vector<int> occ;
+	for (int i = 0 ; i < m ; i++) {
+		if (first) {
+			int dx = lower_bound(s.begin() , s.end() , t[i]) - s.begin();
+			if (s[dx] == t[i])
+				occ.push_back(dx);
+			first = false;
 		}
-		r = pos[x];
+		else {
+
+			int dx = upper_bound(s.begin() , s.end() , t[i]) - s.begin();
+			int dy = dx - 1;
+			if (s[dy] == t[i])
+				occ.push_back(dy);
+
+		}
 	}
-	cout << nline;
+	
+	debug(occ);
+	sort(occ.begin() , occ.end());
+	int maxi = INT_MIN;
+	for (int i = 0 ; i < occ.size() - 1 ; i++){
+		maxi = max(occ[i + 1] - occ[i] , maxi);
+	}
+	cout << maxi << nline;
 }
 
 
 
 int32_t main() {
 	lnx();
-	int t; cin >> t;
+	int t; t = 1;
 	W(t) {
 		test();
 	}
