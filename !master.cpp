@@ -132,48 +132,73 @@ template<typename T, typename U> void umax(T& a, U b) {if (a < b) a = b;}
 #define EACH(x, a) 					for (auto& x: a)
 
 
-const int N = 27;
+
 
 
 
 void test() {
-	int n , m ; cin >> n >> m ;
-	string s , t ; cin >> s >> t;
-
-
-	bool first = true;
-	vector<int> occ;
-	for (int i = 0 ; i < m ; i++) {
-		if (first) {
-			int dx = lower_bound(s.begin() , s.end() , t[i]) - s.begin();
-			if (s[dx] == t[i])
-				occ.push_back(dx);
-			first = false;
+	int n , u , r , d , l;
+	cin >> n >> u >> r >> d >> l;
+	int dx = (u + r + d + l) / 4;
+	bool flag = true;
+		
+	if(u == n){
+		if(r == 0 || l == 0){
+			flag = false;
+		}	
+	}
+	else if(r == n){
+		if(u == 0 || d == 0){
+			flag = false;
 		}
-		else {
-
-			int dx = upper_bound(s.begin() , s.end() , t[i]) - s.begin();
-			int dy = dx - 1;
-			if (s[dy] == t[i])
-				occ.push_back(dy);
-
+	}
+	else if(d == n){
+		if(r == 0 || l == 0){
+			flag = false;
+		}
+	}
+	else if(l == n){
+		if(u == 0 || d == 0){
+			flag = false;
+		}
+	}
+	else if(u == n - 1){
+		if(r == 0 && l == 0){
+			flag = false;
 		}
 	}
 	
-	debug(occ);
-	sort(occ.begin() , occ.end());
-	int maxi = INT_MIN;
-	for (int i = 0 ; i < occ.size() - 1 ; i++){
-		maxi = max(occ[i + 1] - occ[i] , maxi);
+	else if(r == n - 1){
+		if(u == 0 && d == 0){
+			flag = false;
+		}
 	}
-	cout << maxi << nline;
+	
+	else if(d == n - 1){
+		if(r == 0 && l == 0){
+			flag = false;
+		}
+	}
+	
+	else if(l == n - 1){
+		if(u == 0 && d == 0){
+			flag = false;
+		}
+	}
+	
+	else{
+		flag = flag;
+	}
+	
+	cout << ((flag ? "YES" : "NO")) << nline;
+	
 }
 
 
 
 int32_t main() {
 	lnx();
-	int t; t = 1;
+	int t; cin >> t;
 	W(t) {
 		test();
 	}
