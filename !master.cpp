@@ -137,68 +137,38 @@ template<typename T, typename U> void umax(T& a, U b) {if (a < b) a = b;}
 
 
 void test() {
-	int n , u , r , d , l;
-	cin >> n >> u >> r >> d >> l;
-	int dx = (u + r + d + l) / 4;
-	bool flag = true;
-		
-	if(u == n){
-		if(r == 0 || l == 0){
-			flag = false;
-		}	
+	int N, X;
+	cin >> N >> X;
+	vector<int> A(N - 1);
+	for (int i = 0; i < N - 1; i++) {
+		cin >> A[i];
 	}
-	else if(r == n){
-		if(u == 0 || d == 0){
-			flag = false;
+	vector<int> B(101, 0);
+	for (int i = 0; i <= 100; i++) {
+		vector<int> S = A;
+		S.push_back(i);
+		sort(S.begin(), S.end());
+		for (int j = 0; j < N - 2; j++) {
+			B[i] += S[j + 1];
 		}
 	}
-	else if(d == n){
-		if(r == 0 || l == 0){
-			flag = false;
+	if (B[100] < X) {
+		cout << -1 << endl;
+	} else {
+		for (int i = 0; i <= 100; i++) {
+			if (B[i] >= X) {
+				cout << i << endl;
+				break;
+			}
 		}
 	}
-	else if(l == n){
-		if(u == 0 || d == 0){
-			flag = false;
-		}
-	}
-	else if(u == n - 1){
-		if(r == 0 && l == 0){
-			flag = false;
-		}
-	}
-	
-	else if(r == n - 1){
-		if(u == 0 && d == 0){
-			flag = false;
-		}
-	}
-	
-	else if(d == n - 1){
-		if(r == 0 && l == 0){
-			flag = false;
-		}
-	}
-	
-	else if(l == n - 1){
-		if(u == 0 && d == 0){
-			flag = false;
-		}
-	}
-	
-	else{
-		flag = flag;
-	}
-	
-	cout << ((flag ? "YES" : "NO")) << nline;
-	
 }
 
 
 
 int32_t main() {
 	lnx();
-	int t; cin >> t;
+	int t; t = 1;
 	W(t) {
 		test();
 	}
