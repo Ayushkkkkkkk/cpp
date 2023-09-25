@@ -27,7 +27,7 @@ using namespace chrono;
 #define upper(s1) 		transform(s1.begin(), s1.end(), s1.begin(), ::toupper);
 #define getunique(v) 	{sort(all(v)); v.erase(unique(all(v)), v.end());}
 #define vt vector
-#define decimal 		cout << fixed << setprecision(6) ;
+#define decimal 		cout << fixed << setprecision(15) ;
 #define W(t)        	while(t--)
 
 
@@ -132,43 +132,98 @@ template<typename T, typename U> void umax(T& a, U b) {if (a < b) a = b;}
 #define EACH(x, a) 					for (auto& x: a)
 
 
+bool comp(pair<int , int> &a , pair<int , int> &b) {
+	if (a.first < b.first) {
+		return true;
+	}
+	else if (a.first == b.first) {
+		if (a.second < b.second) {
+			return true;
+		}
+	}
 
+	return false;
+}
+
+ll binpow(ll a, ll b) {
+	lld res = 1;
+	while (b > 0) {
+		if (b & 1)
+			res = res * a;
+		a = a * a;
+		b >>= 1;
+	}
+	return res;
+}
+
+
+void brute() {
+	int n ; cin >> n ;
+	vector<pair<int , int>> miner, mines;
+	for (int i = 0 ; i < n ; i++) {
+		int a , b , c , d ; cin >> a >> b >> c >> d;
+		miner.push_back({a , b});
+		mines.push_back({c , d});
+	}
+
+
+
+	sort(miner.begin() , miner.end() , comp);
+	sort(mines.begin() , mines.end() , comp);
+
+	vector<pair<pair<int , int> , pair<int , int>>> valids;
+	lld mini = 10000000000000.0;
+	lld ans = 0.0;
+	bool flag[n + 1];
+	for (int i = 0 ; i < n ; i++) {
+		flag[i] = false;
+	}
+	int c = 0;
+	for (int i = 0 ; i < n ; i++) {
+		for (int j = 0 ; j < n ; j++) {
+				lld temp = (lld)sqrt(binpow(miner[i].first - mines[j].first , 2) + binpow(miner[i].second - mines[j].second , 2));
+				if (temp < mini) {
+					mini = temp;
+					 valids.push_back({{miner[i].first , miner[i].second} , {mines[j].first , mines[j].second}});
+				}
+		}
+	}
+	
+	debug(valids);
+}
 
 
 
 void test() {
-	int N, X;
-	cin >> N >> X;
-	vector<int> A(N - 1);
-	for (int i = 0; i < N - 1; i++) {
-		cin >> A[i];
+	brute();
+	int n ; cin >> n ;
+	vector<pair<int , int>> miner, mines;
+	for (int i = 0 ; i < n ; i++) {
+		int a , b , c , d ; cin >> a >> b >> c >> d;
+		miner.push_back({a , b});
+		mines.push_back({c , d});
 	}
-	vector<int> B(101, 0);
-	for (int i = 0; i <= 100; i++) {
-		vector<int> S = A;
-		S.push_back(i);
-		sort(S.begin(), S.end());
-		for (int j = 0; j < N - 2; j++) {
-			B[i] += S[j + 1];
-		}
+
+
+
+	sort(miner.begin() , miner.end() , comp);
+	sort(mines.begin() , mines.end() , comp);
+
+	debug(miner);
+	debug(mines);
+	decimal;
+	lld ans = 0.0;
+	for (int i = 0 ; i < n ; i++) {
+		ans += (lld)sqrt(binpow(miner[i].first - mines[i].first , 2) + binpow(miner[i].second - mines[i].second , 2));
 	}
-	if (B[100] < X) {
-		cout << -1 << endl;
-	} else {
-		for (int i = 0; i <= 100; i++) {
-			if (B[i] >= X) {
-				cout << i << endl;
-				break;
-			}
-		}
-	}
+	cout << ans << nline;
 }
 
 
 
 int32_t main() {
 	lnx();
-	int t; t = 1;
+	int t; cin >> t;
 	W(t) {
 		test();
 	}
