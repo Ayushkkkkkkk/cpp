@@ -132,96 +132,106 @@ template<typename T, typename U> void umax(T& a, U b) {if (a < b) a = b;}
 #define EACH(x, a) 					for (auto& x: a)
 
 
-bool comp(pair<int , int> &a , pair<int , int> &b) {
-	if (a.first < b.first) {
-		return true;
+
+namespace number_theory {
+	ll gcd(ll x, ll y) {
+	  if (x == 0) return y;
+	  if (y == 0) return x;
+	  return gcd(y, x % y);
 	}
-	else if (a.first == b.first) {
-		if (a.second < b.second) {
-			return true;
+	bool isprime(ll n) { 
+	  if (n <= 1) return false; 
+	  if (n <= 3) return true; 
+	  
+	  if (n % 2 == 0 || n % 3 == 0) return false; 
+	  
+	  for (ll i = 5; i * i <= n; i += 6) 
+		if (n % i == 0 || n % (i+2) == 0) 
+		  return false; 
+	  
+	  return true; 
+	} 
+	 
+	bool prime[15000105]; 
+	void sieve(int n) { 
+	  for (ll i = 0; i <= n; i++) prime[i] = 1;
+	  for (ll p = 2; p * p <= n; p++) { 
+		if (prime[p] == true) { 
+		  for (ll i = p * p; i <= n; i += p) 
+			prime[i] = false; 
+		} 
+	  } 
+	  prime[1] = prime[0] = 0;
+	} 
+	 
+	vector<ll> primelist;
+	bool __primes_generated__ = 0;
+	 
+	void genprimes(int n) {
+	  __primes_generated__ = 1;
+	  sieve(n + 1);
+	  for (ll i = 2; i <= n; i++) if (prime[i]) primelist.push_back(i);
+	}
+	 
+	vector<ll> factors(ll n) {
+	  if (!__primes_generated__) {
+		cerr << "Call genprimes you dope" << endl;
+		exit(1);
+	  }
+	  vector<ll> facs;
+	 
+	  for (ll i = 0; primelist[i] * primelist[i] <= n && i < primelist.size(); i++) {
+		if (n % primelist[i] == 0) {
+		  while (n % primelist[i] == 0) {
+			n /= primelist[i];
+			facs.push_back(primelist[i]);
+		  }
 		}
-	}
-
-	return false;
-}
-
-ll binpow(ll a, ll b) {
-	lld res = 1;
-	while (b > 0) {
-		if (b & 1)
-			res = res * a;
-		a = a * a;
-		b >>= 1;
-	}
-	return res;
-}
-
-
-void brute() {
-	int n ; cin >> n ;
-	vector<pair<int , int>> miner, mines;
-	for (int i = 0 ; i < n ; i++) {
-		int a , b , c , d ; cin >> a >> b >> c >> d;
-		miner.push_back({a , b});
-		mines.push_back({c , d});
-	}
-
-
-
-	sort(miner.begin() , miner.end() , comp);
-	sort(mines.begin() , mines.end() , comp);
-
-	vector<pair<pair<int , int> , pair<int , int>>> valids;
-	lld mini = 10000000000000.0;
-	lld ans = 0.0;
-	bool flag[n + 1];
-	for (int i = 0 ; i < n ; i++) {
-		flag[i] = false;
-	}
-	int c = 0;
-	for (int i = 0 ; i < n ; i++) {
-		for (int j = 0 ; j < n ; j++) {
-				lld temp = (lld)sqrt(binpow(miner[i].first - mines[j].first , 2) + binpow(miner[i].second - mines[j].second , 2));
-				if (temp < mini) {
-					mini = temp;
-					 valids.push_back({{miner[i].first , miner[i].second} , {mines[j].first , mines[j].second}});
-				}
-		}
+	  }
+	  if (n > 1) {
+		facs.push_back(n);
+	  }
+	  sort(facs.begin(), facs.end());
+	  return facs;
 	}
 	
-	debug(valids);
+	vector<ll> getdivs(ll n) {
+    vector<ll> divs;
+    for (ll i = 1; i * i <= n; i++) {
+      if (n % i == 0) {
+        divs.push_back(i);
+        divs.push_back(n / i);
+      }
+    }
+
+    getunique(divs);
+    return divs;
+  }
 }
+
+using namespace number_theory;
+
 
 
 
 void test() {
-	brute();
-	int n ; cin >> n ;
-	vector<pair<int , int>> miner, mines;
-	for (int i = 0 ; i < n ; i++) {
-		int a , b , c , d ; cin >> a >> b >> c >> d;
-		miner.push_back({a , b});
-		mines.push_back({c , d});
+	int n , k ; cin >> n >> k ;
+	if(n & 1){
+		cout << 1 << " " << n / 2 << " " << n / 2 << nline;
 	}
-
-
-
-	sort(miner.begin() , miner.end() , comp);
-	sort(mines.begin() , mines.end() , comp);
-
-	debug(miner);
-	debug(mines);
-	decimal;
-	lld ans = 0.0;
-	for (int i = 0 ; i < n ; i++) {
-		ans += (lld)sqrt(binpow(miner[i].first - mines[i].first , 2) + binpow(miner[i].second - mines[i].second , 2));
+	else if(n % 2 == 0 && n % 4 != 0){
+		cout << n / 2 - 1 << " "<< n / 2 - 1 <<" " << 2 << nline; 
 	}
-	cout << ans << nline;
+	else{
+		cout << n / 2 << " " << n / 4 << " " << n / 4 << nline;
+	}
+	
 }
 
 
 
 int32_t main() {
+	genprimes(1e4);
 	lnx();
 	int t; cin >> t;
 	W(t) {
