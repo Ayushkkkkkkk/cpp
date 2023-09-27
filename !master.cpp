@@ -131,42 +131,68 @@ template<typename T, typename U> void umax(T& a, U b) {if (a < b) a = b;}
 #define FOR(...) 					F_ORC(_VA_ARGS_)(_VA_ARGS_)
 #define EACH(x, a) 					for (auto& x: a)
 
+using pii = pair<int,int>;
 
-
-
-
+template<typename T = int, T mod = 1000000007, typename U = long long>
+struct umod{
+    T val;
+    umod(): val(0){}
+    umod(U x){ x %= mod; if(x < 0) x += mod; val = x;}
+    umod& operator += (umod oth){ val += oth.val; if(val >= mod) val -= mod; return *this; }
+    umod& operator -= (umod oth){ val -= oth.val; if(val < 0) val += mod; return *this; }
+    umod& operator *= (umod oth){ val = ((U)val) * oth.val % mod; return *this; }
+    umod& operator /= (umod oth){ return *this *= oth.inverse(); }
+    umod& operator ^= (U oth){ return *this = pwr(*this, oth); }
+    umod operator + (umod oth) const { return umod(*this) += oth; }
+    umod operator - (umod oth) const { return umod(*this) -= oth; }
+    umod operator * (umod oth) const { return umod(*this) *= oth; }
+    umod operator / (umod oth) const { return umod(*this) /= oth; }
+    umod operator ^ (long long oth) const { return umod(*this) ^= oth; }
+    bool operator < (umod oth) const { return val < oth.val; }
+    bool operator > (umod oth) const { return val > oth.val; }
+    bool operator <= (umod oth) const { return val <= oth.val; }
+    bool operator >= (umod oth) const { return val >= oth.val; }
+    bool operator == (umod oth) const { return val == oth.val; }
+    bool operator != (umod oth) const { return val != oth.val; }
+    umod pwr(umod a, U b) const { umod r = 1; for(; b; a *= a, b >>= 1) if(b&1) r *= a; return r; }
+    umod inverse() const {
+        U a = val, b = mod, u = 1, v = 0;
+        while(b){
+            U t = a/b;
+            a -= t * b; swap(a, b);
+            u -= t * v; swap(u, v);
+        }
+        if(u < 0)
+            u += mod;
+        return u;
+    }
+};
+ 
+using U = umod<int, 998244353>;
 
 void test() {
-	string s ; cin>>s;
-	if(is_sorted(s.begin() , s.end())){
-		cout<<"YES"<<nline;
-		return;
+	string s ; cin >> s;
+	int n = s.size();
+	
+	vector<pii> z;
+	for (int i = 0 , j = 0 ; i < n ; i = j){
+		while(j < n && s[i] == s[j]) j++;
+		z.emplace_back(i , j - 1);
 	}
-	bool flag = true;
-	int y = 0;
-	for(int i =  s.size() - 1 ; i > 0 ; i--){
-		if(s[i] == '0' && s[i - 1]=='0'){
-			y = i - 1;
-			flag = false;
-			break;
-		}
+	int len = z.size();
+	U last_sum = 1;
+	int last_mx = 0;
+	for (int i = 0 ; i < len ; i++){
+		int l , r ; l = z[i].first , r = z[i].second;
+		last_sum *= r - l + 1;
+		last_mx++;
 	}
-	if(flag){
-		cout<<"YES"<<nline;
-		return;
+	
+	for (int i = n - last_mx ; i > 0 ; i--){
+		last_sum *= i;
 	}
-	bool flag2 = true;
-	for(int i = y ; i > 0 ; i--){
-		if(s[i] == '1' && s[i - 1] == '1'){
-			flag2 = false;
-		}
-	}
-	if(flag2){
-		cout<<"YES"<<nline;
-	}
-	else{
-		cout<<"NO"<<nline;
-	}
+	cout << n - last_mx << " " << last_sum.val << nline;
+	
 }
 
 
