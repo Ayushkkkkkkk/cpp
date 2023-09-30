@@ -121,78 +121,50 @@ template<typename T, typename U> void umax(T& a, U b) {if (a < b) a = b;}
 #define uppb(a, x) 	( upper_bound((a).begin(), (a).end(), (x)) - (a).begin())
 
 
-#define F_OR(i, a, b, s) 			for (int i=(a); (s)>0?i<(b):i>(b); i+=(s))
-#define F_OR1(e) 					F_OR(i, 0, e, 1)
-#define F_OR2(i, e) 				F_OR(i, 0, e, 1)
-#define F_OR3(i, b, e) 				F_OR(i, b, e, 1)
-#define F_OR4(i, b, e, s) 			F_OR(i, b, e, s)
-#define GET5(a, b, c, d, e, ...) 	e
-#define F_ORC(...) 					GET5(_VA_ARGS_, F_OR4, F_OR3, F_OR2, F_OR1)
-#define FOR(...) 					F_ORC(_VA_ARGS_)(_VA_ARGS_)
-#define EACH(x, a) 					for (auto& x: a)
+#define F_OR(i, a, b, s) for (int i=(a); (s)>0?i<(b):i>(b); i+=(s))
+#define F_OR1(e) F_OR(i, 0, e, 1)
+#define F_OR2(i, e) F_OR(i, 0, e, 1)
+#define F_OR3(i, b, e) F_OR(i, b, e, 1)
+#define F_OR4(i, b, e, s) F_OR(i, b, e, s)
+#define GET5(a, b, c, d, e, ...) e
+#define F_ORC(...) GET5(__VA_ARGS__, F_OR4, F_OR3, F_OR2, F_OR1)
+#define FOR(...) F_ORC(__VA_ARGS__)(__VA_ARGS__)
+#define EACH(x, a) for (auto& x: a)
 
-using pii = pair<int,int>;
-
-template<typename T = int, T mod = 1000000007, typename U = long long>
-struct umod{
-    T val;
-    umod(): val(0){}
-    umod(U x){ x %= mod; if(x < 0) x += mod; val = x;}
-    umod& operator += (umod oth){ val += oth.val; if(val >= mod) val -= mod; return *this; }
-    umod& operator -= (umod oth){ val -= oth.val; if(val < 0) val += mod; return *this; }
-    umod& operator *= (umod oth){ val = ((U)val) * oth.val % mod; return *this; }
-    umod& operator /= (umod oth){ return *this *= oth.inverse(); }
-    umod& operator ^= (U oth){ return *this = pwr(*this, oth); }
-    umod operator + (umod oth) const { return umod(*this) += oth; }
-    umod operator - (umod oth) const { return umod(*this) -= oth; }
-    umod operator * (umod oth) const { return umod(*this) *= oth; }
-    umod operator / (umod oth) const { return umod(*this) /= oth; }
-    umod operator ^ (long long oth) const { return umod(*this) ^= oth; }
-    bool operator < (umod oth) const { return val < oth.val; }
-    bool operator > (umod oth) const { return val > oth.val; }
-    bool operator <= (umod oth) const { return val <= oth.val; }
-    bool operator >= (umod oth) const { return val >= oth.val; }
-    bool operator == (umod oth) const { return val == oth.val; }
-    bool operator != (umod oth) const { return val != oth.val; }
-    umod pwr(umod a, U b) const { umod r = 1; for(; b; a *= a, b >>= 1) if(b&1) r *= a; return r; }
-    umod inverse() const {
-        U a = val, b = mod, u = 1, v = 0;
-        while(b){
-            U t = a/b;
-            a -= t * b; swap(a, b);
-            u -= t * v; swap(u, v);
-        }
-        if(u < 0)
-            u += mod;
-        return u;
-    }
-};
- 
-using U = umod<int, 998244353>;
 
 void test() {
-	string s ; cin >> s;
-	int n = s.size();
-	
-	vector<pii> z;
-	for (int i = 0 , j = 0 ; i < n ; i = j){
-		while(j < n && s[i] == s[j]) j++;
-		z.emplace_back(i , j - 1);
-	}
-	int len = z.size();
-	U last_sum = 1;
-	int last_mx = 0;
-	for (int i = 0 ; i < len ; i++){
-		int l , r ; l = z[i].first , r = z[i].second;
-		last_sum *= r - l + 1;
-		last_mx++;
+	priority_queue<pair<int , int>> q;
+	int n; cin >> n;
+	map<int , int> v;
+	for (int i = 0 ; i < n ; i++){
+		int x ; cin >> x;
+		v[x]++;
 	}
 	
-	for (int i = n - last_mx ; i > 0 ; i--){
-		last_sum *= i;
+	for (auto it : v){
+		q.push({it.second , it.first});
 	}
-	cout << n - last_mx << " " << last_sum.val << nline;
 	
+	debug(q.top());
+	
+	int sz = n;
+	while(q.size() >= 2){
+		int cnt1 = q.top().first , x1 = q.top().second;
+		q.pop();
+		int cnt2 = q.top().first , x2 = q.top().second;
+		q.pop();
+		cnt1--;
+		cnt2--;
+		sz -= 2;
+		if(cnt1){
+			q.push({cnt1 , x1});
+		}
+		if(cnt2){
+			q.push({cnt2 , x2});
+		}
+	}
+	
+	cout << sz << nline;
 }
 
 
