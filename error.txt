@@ -1,1 +1,11 @@
-q.top() {3,1}
+missing [ 1 2 5 6 ]
+dx 2
+dx 1
+dx 6
+dx 5
+missing [ ]
+missing [ 1 2 6 ]
+dx 2
+dx 1
+dx 6
+missing [ ]
