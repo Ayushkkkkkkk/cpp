@@ -135,65 +135,29 @@ template<typename T, typename U> void umax(T& a, U b) {if (a < b) a = b;}
 
 
 void test() {
-	int n ; cin >> n ;
-	vector<int> p(n);
-	vector<int> missing;
-	set<int> st;
-	multiset<int , greater<int>> ms;
+	int n , q; cin >> n >> q;
+	vector<int> a(n);
+	queue<int> st;
 	for (int i = 0 ; i < n ; i++){
-		cin >> p[i];
-		st.insert(p[i]);
-	}
-
-	for (int i = 1 ; i <= n ; i++){
-		int find = lower_bound(p.begin() , p.end() , i) - p.begin();
-		if(p[find] == i){
-			continue;
-		}
-		else{
-			missing.push_back(i);
-			ms.insert(i);
-		}
-	}
-	vector<bool> occ(n + 1 , false) , miss(n+1 , false);
-	vector<int> smallest , gretest;
-	int c = 0;
-	debug(missing);
-	for (int i = 0 ; i < n ; i++){
-		if(!occ[p[i]]){
-			p[i] = p[i];
-			occ[p[i]] = true;
-			smallest.push_back(p[i]);
-			gretest.push_back(p[i]);
-		}
-		else{
-			smallest.push_back(missing[c++]);
-			// auto find = lower_bound(missing.begin() , missing.end() , p[i]) - missing.begin();
-			// debug(find);
-			auto f = ms.lower_bound(p[i]);
-			int dx = *f;
-			debug(dx);
-			ms.erase(f);
-			gretest.push_back(dx);
-			
-		}
+		cin >> a[i];
 	}
 	
-	for (int i = 0 ; i < n ; i++){
-		cout << smallest[i] << " ";
+	while(q--){
+		int x ; cin >> x;
+		int p = find(a.begin() , a.end() , x) - a.begin();
+		cout << p + 1 << " ";
+		rotate(a.begin() , a.begin() + p , a.begin() + p + 1);
 	}
-	cout << nline;
-	for (int i = 0 ; i < n ; i++){
-		cout << gretest[i] << " ";
-	}
-	cout << nline;
+	
+	
 }
 
 
 
 int32_t main() {
 	lnx();
-	int t; cin >> t;
+	int t; 
+	t = 1;
 	W(t) {
 		test();
 	}
