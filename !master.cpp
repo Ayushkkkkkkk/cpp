@@ -135,29 +135,67 @@ template<typename T, typename U> void umax(T& a, U b) {if (a < b) a = b;}
 
 
 void test() {
-	int n , q; cin >> n >> q;
-	vector<int> a(n);
-	queue<int> st;
-	for (int i = 0 ; i < n ; i++){
-		cin >> a[i];
+	int a , b ; cin >> a >> b;
+	int N = a + b;
+	string s ; cin >> s;
+	int low = 0 , high = N - 1l;
+	bool ok = true;
+	while (low <= high) {
+		if (s[low] == s[high]) {
+			if (s[low] == '?' && s[high] == '?') {
+				s[low] = '1';
+				s[high] = '1';
+			}
+			low++;
+			high--;
+			continue;
+		}
+		else if (s[low] != s[high]) {
+
+			if (s[low] == '?' || s[high] == '?') {
+				if (s[high] == '?') {
+					s[high] = s[low];
+					debug(s[high]);
+					low++;
+					high--;
+					continue;
+				}
+				else {
+					s[low] = s[high];
+					low++;
+					high--;
+					continue;
+				}
+			}
+			else if (s[low] == '?' && s[high] == '?') {
+				s[high] ='1';
+				s[low] ='1';
+				low++;
+				high--;
+				continue;
+			}
+			else {
+				ok = false;
+				low++;
+				high--;
+				break;
+			}
+		}
 	}
-	
-	while(q--){
-		int x ; cin >> x;
-		int p = find(a.begin() , a.end() , x) - a.begin();
-		cout << p + 1 << " ";
-		rotate(a.begin() , a.begin() + p , a.begin() + p + 1);
-	}
-	
-	
+
+
+	if (ok)
+		cout << s << nline;
+	else
+		cout << -1 << nline;
 }
 
 
 
 int32_t main() {
 	lnx();
-	int t; 
-	t = 1;
+	int t;
+	cin >> t;
 	W(t) {
 		test();
 	}
