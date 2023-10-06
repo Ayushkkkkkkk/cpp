@@ -135,59 +135,29 @@ template<typename T, typename U> void umax(T& a, U b) {if (a < b) a = b;}
 
 
 void test() {
-	int a , b ; cin >> a >> b;
-	int N = a + b;
-	string s ; cin >> s;
-	int low = 0 , high = N - 1l;
-	bool ok = true;
-	while (low <= high) {
-		if (s[low] == s[high]) {
-			if (s[low] == '?' && s[high] == '?') {
-				s[low] = '1';
-				s[high] = '1';
+	int n ; cin >> n;
+	vector<int> b(n + 2);
+	cin >> b;
+	
+	multiset<int> have(b.begin() , b.end());
+	int sum = accumulate(b.begin() , b.end() , 0ll);
+	debug(have);
+	debug(sum);
+	for (int x : b){
+		have.erase(have.find(x));
+		sum -= x;
+		if(sum % 2 == 0 && sum <= 2000000000 && have.find(sum / 2)!=have.end()){
+			have.erase(have.find(sum / 2));
+			for (int y : have){
+				cout << y << " ";
 			}
-			low++;
-			high--;
-			continue;
+			cout << nline;
+			return;
 		}
-		else if (s[low] != s[high]) {
-
-			if (s[low] == '?' || s[high] == '?') {
-				if (s[high] == '?') {
-					s[high] = s[low];
-					debug(s[high]);
-					low++;
-					high--;
-					continue;
-				}
-				else {
-					s[low] = s[high];
-					low++;
-					high--;
-					continue;
-				}
-			}
-			else if (s[low] == '?' && s[high] == '?') {
-				s[high] ='1';
-				s[low] ='1';
-				low++;
-				high--;
-				continue;
-			}
-			else {
-				ok = false;
-				low++;
-				high--;
-				break;
-			}
-		}
+		sum += x;
+		have.insert(x);
 	}
-
-
-	if (ok)
-		cout << s << nline;
-	else
-		cout << -1 << nline;
+	cout << -1 << nline;
 }
 
 
