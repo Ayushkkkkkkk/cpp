@@ -134,31 +134,8 @@ template<typename T, typename U> void umax(T& a, U b) {if (a < b) a = b;}
 
 
 
-
 void test() {
-	int n ; cin >> n;
-	vector<int> b(n + 2);
-	cin >> b;
 	
-	multiset<int> have(b.begin() , b.end());
-	int sum = accumulate(b.begin() , b.end() , 0ll);
-	debug(have);
-	debug(sum);
-	for (int x : b){
-		have.erase(have.find(x));
-		sum -= x;
-		if(sum % 2 == 0 && sum <= 2000000000 && have.find(sum / 2)!=have.end()){
-			have.erase(have.find(sum / 2));
-			for (int y : have){
-				cout << y << " ";
-			}
-			cout << nline;
-			return;
-		}
-		sum += x;
-		have.insert(x);
-	}
-	cout << -1 << nline;
 }
 
 
