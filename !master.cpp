@@ -135,29 +135,11 @@ template<typename T, typename U> void umax(T& a, U b) {if (a < b) a = b;}
 const int MOD = 1e9 + 7;
 
 void test() {
-	int n;  cin >> n;
-	vector<int> a(n);
-	cin >> a;
-	int min1 = mine(a);
-	int cnt = 0;
-	for (int x : a){
-		if(min1 == x)
-			cnt++;
-		if((min1 & x) != min1){
-			cout << 0 << nline;
-			return;
-		}
-	}
-	
-	int fact = 1;
-	for (int i = 1 ; i <= n - 2; i++){
-		fact = (1LL * fact * i) % MOD;
-	}
-	int ans = (1LL * cnt * (cnt - 1)) % MOD;
-	
-	ans = (1LL * ans * fact) % MOD;
+	int n , k ; cin >> n >> k;
+	ll ans = 1;
+	for (int i = 0 ; i < k ; i++)
+		ans = (ans * n) % MOD;
 	cout << ans << nline;
-	
 }
 
 
