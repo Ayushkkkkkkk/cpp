@@ -132,14 +132,19 @@ template<typename T, typename U> void umax(T& a, U b) {if (a < b) a = b;}
 #define EACH(x, a) for (auto& x: a)
 
 
-const int MOD = 1e9 + 7;
 
 void test() {
-	int n , k ; cin >> n >> k;
-	ll ans = 1;
-	for (int i = 0 ; i < k ; i++)
-		ans = (ans * n) % MOD;
-	cout << ans << nline;
+	int n ; cin >> n;
+	function<int(int)> isSquare = [&](int n)->int{
+		int y = sqrt(n);
+		return y * y == n;
+	};
+	if (n % 2 == 0 && isSquare(n / 2))
+		cout << "YES" << endl;
+	else if (n % 4 == 0 && isSquare(n / 4))
+		cout << "YES" << endl;
+	else
+		cout << "NO" << endl;
 }
 
 
