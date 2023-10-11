@@ -6,7 +6,7 @@ using namespace std;
 using namespace __gnu_pbds;
 using namespace chrono;
 
-
+const string RandString = "20257I0MPJMLKOQA";
 
 
 
