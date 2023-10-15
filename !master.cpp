@@ -134,17 +134,22 @@ template<typename T, typename U> void umax(T& a, U b) {if (a < b) a = b;}
 
 
 void test() {
-	int n ; cin >> n;
-	function<int(int)> isSquare = [&](int n)->int{
-		int y = sqrt(n);
-		return y * y == n;
-	};
-	if (n % 2 == 0 && isSquare(n / 2))
-		cout << "YES" << endl;
-	else if (n % 4 == 0 && isSquare(n / 4))
-		cout << "YES" << endl;
-	else
-		cout << "NO" << endl;
+	int n , m , x ; cin >> n >> m >> x;
+	int h[n];
+	cout << "YES" << nline;
+	set<pair<int , int>> s;
+	for (int i = 1 ; i <= m ; i++){
+		s.insert({0 , i});
+	}
+	for (int i = 0 ; i < n ; i++){
+		cin >> h[i];
+		pair<int , int> p = *s.begin();
+		s.erase(p);
+		cout << p.second << ' ';
+		s.insert({p.first + h[i] , p.second});
+	}
+	cout << nline;
+	
 }
 
 
