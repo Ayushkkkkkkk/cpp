@@ -101,10 +101,7 @@ template<typename T, typename U> pair<T, U> operator+(pair<T, U> a, pair<T, U> b
 template<typename T, typename U> void umin(T& a, U b) {if (a > b) a = b;}
 template<typename T, typename U> void umax(T& a, U b) {if (a < b) a = b;}
 
-#define fr(i, a, b) for (ll i = a; i < b; i++)
-#define rf(i, a, b) for (ll i = a; i >= b; i--)
-#define F first
-#define S second
+
 
 #ifndef ONLINE_JUDGE
 #define debug(x) cerr << #x <<" "; _print(x); cerr << endl;
@@ -145,53 +142,39 @@ bool comp(const pair<int , int> &a , const pair<int , int> &b) {
 }
 
 void test() {
-	ll n;
-	std::cin >> n;
-	pair<ll, ll> p[n + 1];
-	ll sum = 0;
-	fr(i, 1, n + 1)
-	cin >>
-	    p[i].F;
-	fr(i, 1, n + 1)
-	cin >>
-	    p[i].S;
-	sort(p + 1, p + n + 1, comp);
-	ll presum[n + 1] = {0};
-	map<ll, ll> mp;
-	fr(i, 1, n + 1)
-	{
-		presum[i] = presum[i - 1] + p[i].S;
-		if (mp.find(p[i].F) == mp.end())
-		{
-			mp[p[i].F] = i;
+	int n;
+	cin >> n;
+	if (n == 1) {
+		cout << "1" << endl;
+		return;
+	} else if (n == 2) {
+		cout << "-1" << endl;
+		return;
+	}
+	vector<vector<int>> a(n, vector<int>(n));
+	a[0][0] = 1;
+	a[n - 1][n - 1] = n * n;
+	int x = n * n - 1;
+	for (int i = 1; i + 1 < n; i++) {
+		for (int j = i; j >= 0; j--, x--) {
+			a[i - j][j] = x;
 		}
 	}
-	p[0].F = p[1].F;
-	p[0].S = 0;
-	fr(k, 1, n + 1)
-	{
-		ll i = 1, ans = 0, j = 1 + k;
-		while (j <= n)
-		{
-			if (p[j - 1].F != p[i].F)
-			{
-				j = mp[p[j - 1].F];
-				i = j;
-				j = i + k;
-			}
-			else
-			{
-				ans += presum[j - 1] - presum[i - 1];
-				i += k, j += k;
-			}
+	x = 2;
+	for (int j = n - 2; j > 0; j--) {
+		for (int i = 0; i < n - j; i++, x++) {
+			a[n - i - 1][j + i] = x;
 		}
-		if (i <= n && j - 1 <= n && p[j - 1].F == p[i].F)
-		{
-			ans += presum[j - 1] - presum[i - 1];
-		}
-		cout << ans << " ";
 	}
-	cout << "\n";
+	for (int i = n - 1; i >= 0; i--, x++) {
+		a[i][n - i - 1] = x;
+	}
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			cout << a[i][j] << " ";
+		}
+		cout << endl;
+	}
 }
 
 
