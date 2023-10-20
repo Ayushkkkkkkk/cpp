@@ -36,3 +36,4 @@ for _ in range(int(input())):
                     ans += cycle[:i + 1]
                     break
     print(*map(lambda x: x + 1, ans))
+

@@ -131,50 +131,34 @@ template<typename T, typename U> void umax(T& a, U b) {if (a < b) a = b;}
 #define FOR(...) F_ORC(__VA_ARGS__)(__VA_ARGS__)
 #define EACH(x, a) for (auto& x: a)
 
+const int xn = 1e5 + 10;
+const int xm = - 20 + 10;
+const int sq = 320;
+const int inf = 1e9 + 10;
+const ll INF = 1e18 + 10;
+const int mod = 1e9 + 7;//998244353;
+const int base = 257;
 
+int qq, n, a[xn], ans, mn;
+bool flag;
 
-bool comp(const pair<int , int> &a , const pair<int , int> &b) {
-	if (a.first < b.first)
-		return true;
-	if (a.first == b.first)
-		return a.second > b.second;
-	return false;
-}
 
 void test() {
-	int n;
-	cin >> n;
-	if (n == 1) {
-		cout << "1" << endl;
-		return;
-	} else if (n == 2) {
-		cout << "-1" << endl;
-		return;
-	}
-	vector<vector<int>> a(n, vector<int>(n));
-	a[0][0] = 1;
-	a[n - 1][n - 1] = n * n;
-	int x = n * n - 1;
-	for (int i = 1; i + 1 < n; i++) {
-		for (int j = i; j >= 0; j--, x--) {
-			a[i - j][j] = x;
-		}
-	}
-	x = 2;
-	for (int j = n - 2; j > 0; j--) {
-		for (int i = 0; i < n - j; i++, x++) {
-			a[n - i - 1][j + i] = x;
-		}
-	}
-	for (int i = n - 1; i >= 0; i--, x++) {
-		a[i][n - i - 1] = x;
-	}
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < n; j++) {
-			cout << a[i][j] << " ";
-		}
-		cout << endl;
-	}
+	cin >> n, ans = 0;
+	for (int i = 1; i <= n; ++ i)
+		cin >> a[i], ans += (a[i] <= 0);
+	sort(a + 1, a + n + 1), mn = inf;
+	for (int i = 1; i <= n; ++ i)
+		if (a[i] > 0)
+			mn = min(mn, a[i]);
+	flag = (mn < inf);
+	for (int i = 2; i <= n; ++ i)
+		if (a[i] <= 0)
+			flag &= (a[i] - a[i - 1] >= mn);
+	if (flag)
+		cout << ans + 1 << endl;
+	else
+		cout << ans << endl;
 }
 
 
