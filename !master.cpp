@@ -131,34 +131,32 @@ template<typename T, typename U> void umax(T& a, U b) {if (a < b) a = b;}
 #define FOR(...) F_ORC(__VA_ARGS__)(__VA_ARGS__)
 #define EACH(x, a) for (auto& x: a)
 
-const int xn = 1e5 + 10;
-const int xm = - 20 + 10;
-const int sq = 320;
-const int inf = 1e9 + 10;
-const ll INF = 1e18 + 10;
-const int mod = 1e9 + 7;//998244353;
-const int base = 257;
-
-int qq, n, a[xn], ans, mn;
-bool flag;
 
 
 void test() {
-	cin >> n, ans = 0;
-	for (int i = 1; i <= n; ++ i)
-		cin >> a[i], ans += (a[i] <= 0);
-	sort(a + 1, a + n + 1), mn = inf;
-	for (int i = 1; i <= n; ++ i)
-		if (a[i] > 0)
-			mn = min(mn, a[i]);
-	flag = (mn < inf);
-	for (int i = 2; i <= n; ++ i)
-		if (a[i] <= 0)
-			flag &= (a[i] - a[i - 1] >= mn);
-	if (flag)
-		cout << ans + 1 << endl;
-	else
-		cout << ans << endl;
+	int n ; cin >> n;
+	vector<int> a(n);
+	for (int i = 0 ; i < n; i++){
+		cin >> a[i];
+	}
+	sort(all(a));
+	if(a[0] != 1){
+		cout << "NO" << nline;
+		return;
+	}
+	vector<int> dp(5005 , 0);
+	dp[1] = 1;
+	for(int i = 1 ; i < n ; i++){
+		if(!dp[a[i]]){
+			cout << "NO" << nline;
+			return;
+		}
+		for (int j = 5000 ; j >= a[i]; --j){
+			dp[j] |= dp[j - a[i]];
+		}
+	}
+	cout << "YES" << nline;
+	debug(dp);
 }
 
 
