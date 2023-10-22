@@ -134,29 +134,25 @@ template<typename T, typename U> void umax(T& a, U b) {if (a < b) a = b;}
 
 
 void test() {
-	int n ; cin >> n;
+	int n; cin >> n;
 	vector<int> a(n);
-	for (int i = 0 ; i < n; i++){
+	for (int i = 0; i < n; ++i) {
 		cin >> a[i];
 	}
 	sort(all(a));
-	if(a[0] != 1){
-		cout << "NO" << nline;
+	if (a[0] != 1) {
+		cout << "NO\n";
 		return;
 	}
-	vector<int> dp(5005 , 0);
-	dp[1] = 1;
-	for(int i = 1 ; i < n ; i++){
-		if(!dp[a[i]]){
-			cout << "NO" << nline;
+	long long sum = a[0];
+	for (int i = 1; i < n; ++i) {
+		if (sum < a[i]) {
+			cout << "NO\n";
 			return;
 		}
-		for (int j = 5000 ; j >= a[i]; --j){
-			dp[j] |= dp[j - a[i]];
-		}
+		sum += a[i];
 	}
-	cout << "YES" << nline;
-	debug(dp);
+	cout << "YES\n";
 }
 
 
