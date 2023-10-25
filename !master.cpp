@@ -153,6 +153,7 @@ void test() {
 		sum += a[i];
 	}
 	cout << "YES\n";
+	
 }
 
 
