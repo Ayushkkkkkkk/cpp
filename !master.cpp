@@ -133,27 +133,146 @@ template<typename T, typename U> void umax(T& a, U b) {if (a < b) a = b;}
 
 
 
+#define gc (p1 == p2 && (p2 = (p1 = buf) + fread(buf, 1, 65536, stdin), p1 == p2) ? EOF : *p1 ++)
+#define getchar() p1 == p2 && (p2 = (p1 = buf) + fread(buf, 1, 1000000, stdin), p1 == p2) ? EOF : *p1++
+#define putchar(x) (p3 - obuf < 1000000) ? (*p3++ = x) : (fwrite(obuf, p3 - obuf, 1, stdout), p3 = obuf, *p3++ = x)
+using namespace std;
+static char buf[29999999], *p1 = buf, *p2 = buf, obuf[29999999], *p3 = obuf;
+template <typename item>
+inline void read (register item &x) {
+    x = 0;
+	register char c = getchar();
+    while (c < '0' || c > '9') c = getchar();
+    while (c >= '0' && c <= '9') x = (x << 3) + (x << 1) + (c ^ 48), c = getchar();
+}
+static char cc[15];
+template <typename item>
+inline void print (register item x) {
+	register int len = 0;
+	do cc[len++] = x % 10 + '0', x /= 10; while (x);
+	while (len--) putchar(cc[len]);
+}
+int N;ll A[2000006];
+const ll inf=1e16,mod=1e9+7;
+struct node{int x,y;ll cnt;}B[4000006];
+int tot;ll d[2000006];
+int stk[2000005],tail;
+void add(ll &x,const ll y){
+	if((x+=y)>=mod)x-=mod;
+}
+bool cmp(node a,node b){
+	return a.x<b.x;
+}
+bool cmp1(node a,node b){
+	return a.y>b.y;
+}
+struct BIT{
+	ll val[2000005];
+	void init(){
+		for(int i=0;i<=2*N;++i)val[i]=0ll;
+	}
+	int lowbit(int x){
+		return x&(-x);
+	}
+	void modify(int pos,ll v){
+		v%=mod;
+		for(int i=pos;i<=2*N;i+=lowbit(i))add(val[i],v);
+	}
+	ll query(int pos){
+		ll res=0ll;
+		for(int i=pos;i;i-=lowbit(i))add(res,val[i]);
+		return res;
+	}
+}b0,b2,b3;
+struct BIT1{
+	ll val[2000005];
+	void init(){
+		for(int i=0;i<=2*N;++i)val[i]=0ll;
+	}
+	int lowbit(int x){
+		return x&(-x);
+	}
+	void modify(int pos,ll v){
+		for(int i=pos;i<=2*N;i+=lowbit(i))val[i]+=v;
+	}
+	ll query(int pos){
+		ll res=0ll;
+		for(int i=pos;i;i-=lowbit(i))res+=val[i];
+		return res;
+	}
+}B1;
+ll res1[1000005],res2[1000005],sum[2000005];
+
+
 void test() {
-	int n; cin >> n;
-	vector<int> a(n);
-	for (int i = 0; i < n; ++i) {
-		cin >> a[i];
+	read(N);ll mx=0ll;tot=0;
+	for(int i=1;i<=N;++i)read(A[i]),mx=max(mx,A[i]),res1[i]=res2[i]=0ll;
+	if(N==1){print(0);putchar(' ');print(0);putchar('\n');return ;}
+	A[0]=inf;for(int i=N+1;i<=2*N;++i)A[i]=A[i-N];
+	for(int i=1;i<2*N;++i){
+		sum[i]=sum[i-1];
+		if(A[i+1]<A[i])sum[i]+=A[i]-A[i+1];
 	}
-	sort(all(a));
-	if (a[0] != 1) {
-		cout << "NO\n";
-		return;
+    for(int i=0;i<2*N;++i)d[i]=A[i]-A[i+1];tail=0;
+    for(int i=0;i<2*N;++i){
+    	if(d[i]<0ll){
+    		while(d[i]<0ll){
+    			if(d[stk[tail]]<-d[i]){
+    				B[++tot]=node{stk[tail],i,d[stk[tail]]};
+    				d[i]+=d[stk[tail]];d[stk[tail--]]=0ll;
+				}else {
+					B[++tot]=node{stk[tail],i,-d[i]};
+					d[stk[tail]]+=d[i];d[i]=0ll;
+					if(!d[stk[tail]])--tail;
+				}
+			}
+		}else if(d[i]>0ll)stk[++tail]=i; 
 	}
-	long long sum = a[0];
-	for (int i = 1; i < n; ++i) {
-		if (sum < a[i]) {
-			cout << "NO\n";
-			return;
+	while(tail){
+		B[++tot]=node{stk[tail],2*N,d[stk[tail]]};
+		d[stk[tail--]]=0ll;
+	}
+    for(int i=1;i<=N;++i)res1[i]=sum[i+N-2]-sum[i-1]+mx-A[i];
+    b0.init();b2.init();b3.init();B1.init();
+	sort(B+1,B+tot+1,cmp);int nd=1;
+    for(int i=0;i<=2*N;++i){
+    	while(nd<=tot&&B[nd].x<=i){
+    		b0.modify(B[nd].y,1ll*(B[nd].y-B[nd].x)*(B[nd].y-B[nd].x)%mod*(B[nd].cnt%mod)%mod);
+    		B1.modify(B[nd].y,B[nd].cnt);b2.modify(B[nd].y,1ll*B[nd].y*B[nd].cnt%mod);
+    		b3.modify(B[nd].y,1ll*B[nd].y*B[nd].y%mod*B[nd].cnt%mod); ++nd;
 		}
-		sum += a[i];
+    	if(i+1<=N){
+    		res2[i+1]=(res2[i+1]+mod-(b0.query(i+N-1)+mod-b0.query(i))%mod)%mod;
+    		ll allcnt=B1.query(i+N-1)-B1.query(i);res2[i+1]=(res2[i+1]+1ll*N*N%mod*((mx-A[i+1]-allcnt)%mod)%mod)%mod;
+			allcnt%=mod;res2[i+1]=(res2[i+1]+1ll*i*i%mod*allcnt)%mod;
+			ll c3=b3.query(i+N-1)-b3.query(i)+mod,c2=b2.query(i+N-1)-b2.query(i)+mod;c3%=mod;c2%=mod;
+			res2[i+1]=(res2[i+1]+mod-2ll*i*c2%mod)%mod;
+			res2[i+1]=(res2[i+1]+c3)%mod;   
+		} 
+		if(i-(N-2)<=N&&i-(N-2)>=1)res2[i-(N-2)]=(res2[i-(N-2)]+b0.query(i)-b0.query(i-(N-2)-1)+mod)%mod;
+	} nd=1;B1.init();b2.init();b3.init();sort(B+1,B+tot+1,cmp1);
+	for(int i=2*N;i>=1;--i){
+		while(nd<=tot&&B[nd].y>=i){
+			if(B[nd].x){
+				B1.modify(B[nd].x,B[nd].cnt); b2.modify(B[nd].x,1ll*B[nd].x*B[nd].cnt%mod);
+			    b3.modify(B[nd].x,1ll*B[nd].x*B[nd].x%mod*B[nd].cnt%mod);
+			}
+			++nd; 
+		}
+		if(i-(N-1)<=N&&i-(N-1)>=1){
+			int l=i-(N-1);
+			ll c1=B1.query(i-1)-B1.query(l-1),c2=b2.query(i-1)-b2.query(l-1)+mod,c3=b3.query(i-1)-b3.query(l-1)+mod;
+		//	cout<<l<<" "<<c1<<endl;
+			c2%=mod;c3%=mod;c1%=mod;
+		    res2[l]=(res2[l]+1ll*i*i%mod*c1%mod)%mod;
+		    res2[l]=(res2[l]-2ll*i*c2%mod+mod)%mod;
+		    res2[l]=(res2[l]+c3)%mod;
+		}
 	}
-	cout << "YES\n";
-	
+	for(int i=1;i<=N;++i){
+		print(res1[i]);putchar(' ');
+		print(res2[i]);putchar('\n');
+	}
 }
 
 
@@ -165,6 +284,7 @@ int32_t main() {
 	W(t) {
 		test();
 	}
+	fwrite(obuf, p3 - obuf, 1, stdout);
 }
 
 
