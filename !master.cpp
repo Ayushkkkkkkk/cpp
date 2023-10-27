@@ -132,147 +132,98 @@ template<typename T, typename U> void umax(T& a, U b) {if (a < b) a = b;}
 #define EACH(x, a) for (auto& x: a)
 
 
+#define rep(i,a,n) for (int i=a;i<n;i++)
+#define per(i,a,n) for (int i=n-1;i>=a;i--)
+#define fi first
+#define se second
+#define SZ(x) ((int)(x).size())
+typedef vector<int> VI;
+typedef basic_string<int> BI;
+typedef long long ll;
+typedef pair<int,int> PII;
+typedef double db;
+mt19937 mrand(random_device{}()); 
+const ll mod=1000000007;
+int rnd(int x) { return mrand() % x;}
+ll powmod(ll a,ll b) {ll res=1;a%=mod; assert(b>=0); for(;b;b>>=1){if(b&1)res=res*a%mod;a=a*a%mod;}return res;}
+ll gcd(ll a,ll b) { return b?gcd(b,a%b):a;}
 
-#define gc (p1 == p2 && (p2 = (p1 = buf) + fread(buf, 1, 65536, stdin), p1 == p2) ? EOF : *p1 ++)
-#define getchar() p1 == p2 && (p2 = (p1 = buf) + fread(buf, 1, 1000000, stdin), p1 == p2) ? EOF : *p1++
-#define putchar(x) (p3 - obuf < 1000000) ? (*p3++ = x) : (fwrite(obuf, p3 - obuf, 1, stdout), p3 = obuf, *p3++ = x)
-using namespace std;
-static char buf[29999999], *p1 = buf, *p2 = buf, obuf[29999999], *p3 = obuf;
-template <typename item>
-inline void read (register item &x) {
-    x = 0;
-	register char c = getchar();
-    while (c < '0' || c > '9') c = getchar();
-    while (c >= '0' && c <= '9') x = (x << 3) + (x << 1) + (c ^ 48), c = getchar();
-}
-static char cc[15];
-template <typename item>
-inline void print (register item x) {
-	register int len = 0;
-	do cc[len++] = x % 10 + '0', x /= 10; while (x);
-	while (len--) putchar(cc[len]);
-}
-int N;ll A[2000006];
-const ll inf=1e16,mod=1e9+7;
-struct node{int x,y;ll cnt;}B[4000006];
-int tot;ll d[2000006];
-int stk[2000005],tail;
-void add(ll &x,const ll y){
-	if((x+=y)>=mod)x-=mod;
-}
-bool cmp(node a,node b){
-	return a.x<b.x;
-}
-bool cmp1(node a,node b){
-	return a.y>b.y;
-}
-struct BIT{
-	ll val[2000005];
-	void init(){
-		for(int i=0;i<=2*N;++i)val[i]=0ll;
-	}
-	int lowbit(int x){
-		return x&(-x);
-	}
-	void modify(int pos,ll v){
-		v%=mod;
-		for(int i=pos;i<=2*N;i+=lowbit(i))add(val[i],v);
-	}
-	ll query(int pos){
-		ll res=0ll;
-		for(int i=pos;i;i-=lowbit(i))add(res,val[i]);
-		return res;
-	}
-}b0,b2,b3;
-struct BIT1{
-	ll val[2000005];
-	void init(){
-		for(int i=0;i<=2*N;++i)val[i]=0ll;
-	}
-	int lowbit(int x){
-		return x&(-x);
-	}
-	void modify(int pos,ll v){
-		for(int i=pos;i<=2*N;i+=lowbit(i))val[i]+=v;
-	}
-	ll query(int pos){
-		ll res=0ll;
-		for(int i=pos;i;i-=lowbit(i))res+=val[i];
-		return res;
-	}
-}B1;
-ll res1[1000005],res2[1000005],sum[2000005];
 
+const int N=2010;
+vector<PII> e[N];
+bool vis[N];
+int x[N],y[N],pa[N];
+int n;
+VI cyc;
+int g[N][N];
+bool dfs(int u,int pe) {
+	vis[u]=1;
+	for (auto [v,w]:e[u]) {
+		if (!vis[v]) {
+			pa[v]=u;
+			if (dfs(v,w)) return true;
+		} else if (w!=pe&&vis[v]) {
+			int x=u;
+			while (x!=v) {
+				cyc.pb(x);
+				x=pa[x];
+			}
+			cyc.pb(v);
+			return true;
+		}
+	}
+	return false;
+}
 
 void test() {
-	read(N);ll mx=0ll;tot=0;
-	for(int i=1;i<=N;++i)read(A[i]),mx=max(mx,A[i]),res1[i]=res2[i]=0ll;
-	if(N==1){print(0);putchar(' ');print(0);putchar('\n');return ;}
-	A[0]=inf;for(int i=N+1;i<=2*N;++i)A[i]=A[i-N];
-	for(int i=1;i<2*N;++i){
-		sum[i]=sum[i-1];
-		if(A[i+1]<A[i])sum[i]+=A[i]-A[i+1];
+	scanf("%d",&n);
+	//n=1000;
+	rep(i,1,2*n+1) e[i].clear(),vis[i]=0;
+	rep(i,1,2*n+1) rep(j,1,2*n+1) g[i][j]=-1;
+	rep(i,1,2*n+1) {
+		//x[i]=(i+1)/2; y[i]=(i%2==1)?(i+1)/2:(i+1)/2%n+1;
+		scanf("%d%d",x+i,y+i);
+		y[i]+=n;
+		e[x[i]].pb(mp(y[i],i));
+		e[y[i]].pb(mp(x[i],i));
+		g[x[i]][y[i]]=g[y[i]][x[i]]=i;
 	}
-    for(int i=0;i<2*N;++i)d[i]=A[i]-A[i+1];tail=0;
-    for(int i=0;i<2*N;++i){
-    	if(d[i]<0ll){
-    		while(d[i]<0ll){
-    			if(d[stk[tail]]<-d[i]){
-    				B[++tot]=node{stk[tail],i,d[stk[tail]]};
-    				d[i]+=d[stk[tail]];d[stk[tail--]]=0ll;
-				}else {
-					B[++tot]=node{stk[tail],i,-d[i]};
-					d[stk[tail]]+=d[i];d[i]=0ll;
-					if(!d[stk[tail]])--tail;
-				}
-			}
-		}else if(d[i]>0ll)stk[++tail]=i; 
+	cyc.clear();
+	rep(i,1,2*n+1) if (!vis[i]) {
+		if (dfs(i,-1)) break;
 	}
-	while(tail){
-		B[++tot]=node{stk[tail],2*N,d[stk[tail]]};
-		d[stk[tail--]]=0ll;
+	int m=SZ(cyc);
+	assert(m>0);
+	PII ps(0,m-1);
+	rep(i,0,m) rep(j,i+2,m) if (g[cyc[i]][cyc[j]]!=-1) {
+		if (j-i<ps.se-ps.fi) ps=mp(i,j);
 	}
-    for(int i=1;i<=N;++i)res1[i]=sum[i+N-2]-sum[i-1]+mx-A[i];
-    b0.init();b2.init();b3.init();B1.init();
-	sort(B+1,B+tot+1,cmp);int nd=1;
-    for(int i=0;i<=2*N;++i){
-    	while(nd<=tot&&B[nd].x<=i){
-    		b0.modify(B[nd].y,1ll*(B[nd].y-B[nd].x)*(B[nd].y-B[nd].x)%mod*(B[nd].cnt%mod)%mod);
-    		B1.modify(B[nd].y,B[nd].cnt);b2.modify(B[nd].y,1ll*B[nd].y*B[nd].cnt%mod);
-    		b3.modify(B[nd].y,1ll*B[nd].y*B[nd].y%mod*B[nd].cnt%mod); ++nd;
-		}
-    	if(i+1<=N){
-    		res2[i+1]=(res2[i+1]+mod-(b0.query(i+N-1)+mod-b0.query(i))%mod)%mod;
-    		ll allcnt=B1.query(i+N-1)-B1.query(i);res2[i+1]=(res2[i+1]+1ll*N*N%mod*((mx-A[i+1]-allcnt)%mod)%mod)%mod;
-			allcnt%=mod;res2[i+1]=(res2[i+1]+1ll*i*i%mod*allcnt)%mod;
-			ll c3=b3.query(i+N-1)-b3.query(i)+mod,c2=b2.query(i+N-1)-b2.query(i)+mod;c3%=mod;c2%=mod;
-			res2[i+1]=(res2[i+1]+mod-2ll*i*c2%mod)%mod;
-			res2[i+1]=(res2[i+1]+c3)%mod;   
-		} 
-		if(i-(N-2)<=N&&i-(N-2)>=1)res2[i-(N-2)]=(res2[i-(N-2)]+b0.query(i)-b0.query(i-(N-2)-1)+mod)%mod;
-	} nd=1;B1.init();b2.init();b3.init();sort(B+1,B+tot+1,cmp1);
-	for(int i=2*N;i>=1;--i){
-		while(nd<=tot&&B[nd].y>=i){
-			if(B[nd].x){
-				B1.modify(B[nd].x,B[nd].cnt); b2.modify(B[nd].x,1ll*B[nd].x*B[nd].cnt%mod);
-			    b3.modify(B[nd].x,1ll*B[nd].x*B[nd].x%mod*B[nd].cnt%mod);
-			}
-			++nd; 
-		}
-		if(i-(N-1)<=N&&i-(N-1)>=1){
-			int l=i-(N-1);
-			ll c1=B1.query(i-1)-B1.query(l-1),c2=b2.query(i-1)-b2.query(l-1)+mod,c3=b3.query(i-1)-b3.query(l-1)+mod;
-		//	cout<<l<<" "<<c1<<endl;
-			c2%=mod;c3%=mod;c1%=mod;
-		    res2[l]=(res2[l]+1ll*i*i%mod*c1%mod)%mod;
-		    res2[l]=(res2[l]-2ll*i*c2%mod+mod)%mod;
-		    res2[l]=(res2[l]+c3)%mod;
+	cyc=VI(cyc.begin()+ps.fi,cyc.begin()+ps.se+1);
+	if (cyc[0]>n) reverse(all(cyc));
+	assert(SZ(cyc)%2==0);
+	int cc=0;
+	while (SZ(cyc)>4) {
+		int x=SZ(cyc)/2;
+		if (x%2==0) x-=1;
+		assert(cyc[x]>n);
+		printf("? %d %d\n",cyc[0],cyc[x]-n);
+		++cc;
+		assert(cc<=10);
+		fflush(stdout);
+		int col;
+		scanf("%d",&col);
+		bool L=1;
+		rep(i,0,x+1) if (g[cyc[i]][cyc[(i+1)%(x+1)]]==col) L=0;
+		g[cyc[0]][cyc[x]]=g[cyc[x]][cyc[0]]=col;
+		if (L) {
+			cyc.resize(x+1);
+		} else {
+			cyc.erase(cyc.begin()+1,cyc.begin()+x);
 		}
 	}
-	for(int i=1;i<=N;++i){
-		print(res1[i]);putchar(' ');
-		print(res2[i]);putchar('\n');
-	}
+	printf("! %d %d %d %d\n",cyc[0],cyc[2],cyc[1]-n,cyc[3]-n);
+	fflush(stdout);
+	scanf("%*s");
 }
 
 
@@ -284,7 +235,6 @@ int32_t main() {
 	W(t) {
 		test();
 	}
-	fwrite(obuf, p3 - obuf, 1, stdout);
 }
 
 
