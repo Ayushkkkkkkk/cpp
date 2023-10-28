@@ -132,98 +132,10 @@ template<typename T, typename U> void umax(T& a, U b) {if (a < b) a = b;}
 #define EACH(x, a) for (auto& x: a)
 
 
-#define rep(i,a,n) for (int i=a;i<n;i++)
-#define per(i,a,n) for (int i=n-1;i>=a;i--)
-#define fi first
-#define se second
-#define SZ(x) ((int)(x).size())
-typedef vector<int> VI;
-typedef basic_string<int> BI;
-typedef long long ll;
-typedef pair<int,int> PII;
-typedef double db;
-mt19937 mrand(random_device{}()); 
-const ll mod=1000000007;
-int rnd(int x) { return mrand() % x;}
-ll powmod(ll a,ll b) {ll res=1;a%=mod; assert(b>=0); for(;b;b>>=1){if(b&1)res=res*a%mod;a=a*a%mod;}return res;}
-ll gcd(ll a,ll b) { return b?gcd(b,a%b):a;}
 
-
-const int N=2010;
-vector<PII> e[N];
-bool vis[N];
-int x[N],y[N],pa[N];
-int n;
-VI cyc;
-int g[N][N];
-bool dfs(int u,int pe) {
-	vis[u]=1;
-	for (auto [v,w]:e[u]) {
-		if (!vis[v]) {
-			pa[v]=u;
-			if (dfs(v,w)) return true;
-		} else if (w!=pe&&vis[v]) {
-			int x=u;
-			while (x!=v) {
-				cyc.pb(x);
-				x=pa[x];
-			}
-			cyc.pb(v);
-			return true;
-		}
-	}
-	return false;
-}
 
 void test() {
-	scanf("%d",&n);
-	//n=1000;
-	rep(i,1,2*n+1) e[i].clear(),vis[i]=0;
-	rep(i,1,2*n+1) rep(j,1,2*n+1) g[i][j]=-1;
-	rep(i,1,2*n+1) {
-		//x[i]=(i+1)/2; y[i]=(i%2==1)?(i+1)/2:(i+1)/2%n+1;
-		scanf("%d%d",x+i,y+i);
-		y[i]+=n;
-		e[x[i]].pb(mp(y[i],i));
-		e[y[i]].pb(mp(x[i],i));
-		g[x[i]][y[i]]=g[y[i]][x[i]]=i;
-	}
-	cyc.clear();
-	rep(i,1,2*n+1) if (!vis[i]) {
-		if (dfs(i,-1)) break;
-	}
-	int m=SZ(cyc);
-	assert(m>0);
-	PII ps(0,m-1);
-	rep(i,0,m) rep(j,i+2,m) if (g[cyc[i]][cyc[j]]!=-1) {
-		if (j-i<ps.se-ps.fi) ps=mp(i,j);
-	}
-	cyc=VI(cyc.begin()+ps.fi,cyc.begin()+ps.se+1);
-	if (cyc[0]>n) reverse(all(cyc));
-	assert(SZ(cyc)%2==0);
-	int cc=0;
-	while (SZ(cyc)>4) {
-		int x=SZ(cyc)/2;
-		if (x%2==0) x-=1;
-		assert(cyc[x]>n);
-		printf("? %d %d\n",cyc[0],cyc[x]-n);
-		++cc;
-		assert(cc<=10);
-		fflush(stdout);
-		int col;
-		scanf("%d",&col);
-		bool L=1;
-		rep(i,0,x+1) if (g[cyc[i]][cyc[(i+1)%(x+1)]]==col) L=0;
-		g[cyc[0]][cyc[x]]=g[cyc[x]][cyc[0]]=col;
-		if (L) {
-			cyc.resize(x+1);
-		} else {
-			cyc.erase(cyc.begin()+1,cyc.begin()+x);
-		}
-	}
-	printf("! %d %d %d %d\n",cyc[0],cyc[2],cyc[1]-n,cyc[3]-n);
-	fflush(stdout);
-	scanf("%*s");
+	
 }
 
 
