@@ -131,81 +131,22 @@ template<typename T, typename U> void umax(T& a, U b) {if (a < b) a = b;}
 #define FOR(...) F_ORC(__VA_ARGS__)(__VA_ARGS__)
 #define EACH(x, a) for (auto& x: a)
 
-int read() {
-	char c = getchar(); int x = 0; bool f = 0;
-	while (c < 48 || c > 57) f |= (c == '-'), c = getchar();
-	do x = (x << 1) + (x << 3) + (c ^ 48), c = getchar();
-	while (c >= 48 && c <= 57);
-	if (f) return -x;
-	return x;
-}
-const int N = 1000003;
-vector<int> vec[N];
-int ft[N], sn[N], sz[N], tp[N], dfn[N], num;
-void dfs(int u) {
-	sz[u] = 1; sn[u] = 0;
-	for (int v : vec[u]) {
-		ft[v] = u;
-		dfs(v);
-		sz[u] += sz[v];
-		if (sz[v] > sz[sn[u]]) sn[u] = v;
-	}
-}
-void split(int u, int tops) {
-	tp[u] = tops; dfn[u] = ++num;
-	if (sn[u]) split(sn[u], tops);
-	for (int v : vec[u]) {
-		if (v == sn[u]) continue;
-		split(v, v);
-	}
-}
-int op[N], val[N], vv[N];
-ll tr[N];
-void upd(int x, ll v) {for (int i = x; i <= num; i += (i & -i)) tr[i] += v;}
-ll qry(int x) {
-	ll res = 0;
-	for (int i = x; i; i ^= (i & -i)) res += tr[i];
-	return res;
-}
-ll query(int x) {
-	ll res = 0;
-	while (x) {
-		res += qry(dfn[x]) - qry(dfn[tp[x]] - 1);
-		x = ft[tp[x]];
-	}
-	return res;
-}
-ll res[N];
-void calc(int u, ll cur) {
-	cur += qry(dfn[u]) - qry(dfn[u] - 1);
-	res[u] = cur;
-	for (int v : vec[u]) calc(v, cur);
-}
+const int MXN = 4e5 + 10;
+int arr[MXN];
 
 
 void test() {
-	int q = read();
-	int sz = 1;
-	num = 0;
-	for (int i = 1; i <= q; ++i) {
-		op[i] = read();
-		val[i] = read();
-		if (op[i] == 1) vec[val[i]].emplace_back(++sz);
-		else vv[i] = read();
-	}
-	dfs(1);
-	split(1, 1);
-	sz = 1;
-	for (int i = 1; i <= q; ++i)
-		if (op[i] == 1) {
-			++sz;
-			upd(dfn[sz], -query(val[i]));
-		}
-		else upd(dfn[val[i]], vv[i]);
-	calc(1, 0);
-	for (int i = 1; i <= sz; ++i) printf("%lld ", res[i]);
-	putchar('\n');
-	for (int i = 1; i <= sz; ++i) vec[i].clear(), tr[i] = 0;
+	int n;
+        cin>>n;
+        arr[n+1]=0;
+        for(int i=1;i<=n;i++)cin>>arr[i];
+        ll ans=0;
+        for(int i=1;i<=n;i++){
+            ll should=min(arr[i],max(arr[i-1],arr[i+1]));
+            ans+=arr[i]-should+abs(should-arr[i-1]);
+            arr[i]=should;
+        }
+        cout << ans + arr[n] << nline;
 }
 
 
