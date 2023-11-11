@@ -131,22 +131,10 @@ template<typename T, typename U> void umax(T& a, U b) {if (a < b) a = b;}
 #define FOR(...) F_ORC(__VA_ARGS__)(__VA_ARGS__)
 #define EACH(x, a) for (auto& x: a)
 
-const int MXN = 4e5 + 10;
-int arr[MXN];
 
 
 void test() {
-	int n;
-        cin>>n;
-        arr[n+1]=0;
-        for(int i=1;i<=n;i++)cin>>arr[i];
-        ll ans=0;
-        for(int i=1;i<=n;i++){
-            ll should=min(arr[i],max(arr[i-1],arr[i+1]));
-            ans+=arr[i]-should+abs(should-arr[i-1]);
-            arr[i]=should;
-        }
-        cout << ans + arr[n] << nline;
+	
 }
 
 
