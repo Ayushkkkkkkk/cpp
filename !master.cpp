@@ -132,9 +132,55 @@ template<typename T, typename U> void umax(T& a, U b) {if (a < b) a = b;}
 #define EACH(x, a) for (auto& x: a)
 
 
+#define forn(i, n) for (int i = 0; i < int(n); ++i)
+
+const int MOD = 1e9 + 7;
+const int N = 40;
+
+using mat = array<array<int, N>, N>;
+
+int add(int x, int y) {
+  x += y;
+  if (x >= MOD) x -= MOD;
+  if (x < 0) x += MOD;
+  return x;
+}
+
+int mul(int x, int y) {
+  return x * 1LL * y % MOD;
+}
+
+mat mul(mat x, mat y) {
+  mat res;
+  forn(i, N) forn(j, N) res[i][j] = 0;
+  forn(i, N) forn(j, N) forn(k, N)
+    res[i][j] = add(res[i][j], mul(x[i][k], y[k][j]));
+  return res;
+}
+
+template<class T>
+T binpow(T x, int y, T e) {
+  T res = e;
+  while (y) {
+    if (y & 1) res = mul(res, x);
+    x = mul(x, x);
+    y >>= 1;
+  }
+  return res;
+}
+
+
 
 void test() {
-	
+	int n, x, k;
+    cin >> n >> x >> k;
+    mat a, e;
+    forn(i, N) forn(j, N) a[i][j] = (i < x && abs(i - j) <= k);
+    forn(i, N) forn(j, N) e[i][j] = (i == j);
+    mat b = binpow(a, n - 1, e);
+    int ans = mul(x + k, binpow(2 * k + 1, n - 1, 1));
+    forn(i, x) forn(j, x) ans = add(ans, -b[i][j]);
+    cout << ans << '\n';
 }
 
 
