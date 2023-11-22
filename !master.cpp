@@ -109,7 +109,7 @@ template<typename T, typename U> void umax(T& a, U b) {if (a < b) a = b;}
 #define debug(x)
 #endif
 
-// #define int long long
+#define int long long
 
 
 #define sum(a)     	( accumulate ((a).begin(), (a).end(), 0ll))
@@ -131,61 +131,10 @@ template<typename T, typename U> void umax(T& a, U b) {if (a < b) a = b;}
 #define FOR(...) F_ORC(__VA_ARGS__)(__VA_ARGS__)
 #define EACH(x, a) for (auto& x: a)
 
-#define forn(i, n) for (int i = 0; i < int(n); i++)
-
-
-struct card {
-	int x, y;
-	card() {}
-	card(int x, int y) : x(x), y(y) {}
-};
-
-void dfs(int v, const vector<int> &g, vector<int> &res, vector<char> &used) {
-	if (used[v]) return;
-	used[v] = true;
-	dfs(g[v], g, res, used);
-	res[v] = -res[g[v]];
-}
 
 
 void test() {
-	vector<vector<card>> a(2);
-	vector<vector<int>> prpos(2);
-	forn(z, 2) {
-		int n;
-		scanf("%d", &n);
-		a[z].resize(n);
-		forn(i, n) scanf("%d", &a[z][i].x);
-		forn(i, n) scanf("%d", &a[z][i].y);
-		sort(a[z].begin(), a[z].end(), [](const card & a, const card & b) {
-			return a.x > b.x;
-		});
-		prpos[z].resize(n + 1, -1);
-		forn(i, n) {
-			if (prpos[z][i] == -1 || a[z][i].y > a[z][prpos[z][i]].y)
-				prpos[z][i + 1] = i;
-			else
-				prpos[z][i + 1] = prpos[z][i];
-		}
-	}
-	int n = a[0].size();
-	vector<int> g(n + a[1].size());
-	forn(z, 2) forn(i, a[z].size()) {
-		int cnt = lower_bound(a[z ^ 1].begin(), a[z ^ 1].end(), card(a[z][i].y, -1), [](const card & a, const card & b) {
-			return a.x > b.x;
-		}) - a[z ^ 1].begin();
-		g[i + z * n] = prpos[z ^ 1][cnt] == -1 ? -1 : prpos[z ^ 1][cnt] + (z ^ 1) * n;
-	}
-	vector<int> res(g.size());
-	vector<char> used(g.size());
-	forn(i, g.size()) if (g[i] == -1) res[i] = 1, used[i] = true;
-	int w = 0, l = 0;
-	forn(i, n) {
-		if (!used[i]) dfs(i, g, res, used);
-		w += res[i] == 1;
-		l += res[i] == -1;
-	}
-	printf("%d %d %d\n", w, n - l - w, l);
+	
 }
 
 
