@@ -132,48 +132,14 @@ template<typename T, typename U> void umax(T& a, U b) {if (a < b) a = b;}
 #define EACH(x, a) for (auto& x: a)
 
 
-
+// cost = a * l + b;
 void test() {
-	int k , n , m ; cin >> k >> n >> m ;
-	vector<int> a(n) , b(m);
-	for (int i = 0 ; i < n ; i++){
-		cin >> a[i];
-	}
-	FOR(m){
-		cin >> b[i];
-	}
-	int pos1 = 0 , pos2 = 0;
-	vector<int> res;
-	bool ok = true;
-	while(pos1 != n || pos2 != m){
-		if(pos1 != n && a[pos1] == 0){
-			res.push_back(0);
-			k++;
-			pos1++;
-		}
-		else if(pos2 != m && b[pos2] == 0){
-			res.push_back(0);
-			k++;
-			pos2++;
-		}
-		else if(pos1 != n && a[pos1] <= k){
-			res.push_back(a[pos1++]);
-		}
-		else if(pos2 != m && b[pos2] <= k){
-			res.push_back(b[pos2++]);
-		}
-		else{
-			cout << - 1 << nline;
-			ok = false;
-			break;
-		}
-	}
-	if(ok){
-		for (int cur : res){
-			cout << cur << " ";
-		}
-		cout << nline;
-	}
+	int n , a , b;
+	string s ;
+	cin >> n >> a >> b >> s;
+	int m = unique(s.begin() , s.end()) - s.begin();
+	debug(m);
+	cout << n * a + max(n *b , (m / 2 + 1) * b) << nline;
 }
 
 
