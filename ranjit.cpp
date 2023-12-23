@@ -1,0 +1,4 @@
+<!do
+{
+	/* code */
+} while (ctype);
