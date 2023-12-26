@@ -133,43 +133,391 @@ template<typename T, typename U> void umax(T& a, U b) {if (a < b) a = b;}
 
 
 
+bool isPrime(int n)
+{
+	// Corner case
+	if (n <= 1)
+		return false;
+
+	// Check from 2 to n-1
+	for (int i = 2; i <= n / 2; i++)
+		if (n % i == 0)
+			return false;
+
+	return true;
+}
+
+
+
 void test() {
-	int W, H;
-	cin >> W >> H;
+	int n ; cin >> n ;
+	string s ; cin >> s;
+	int temp = -1;
+	bool one = false;
+	for (int i = 0 ; i < n ; i++) {
+		bool ok = isPrime(s[i] - '0');
+		if (!ok) {
+			temp = s[i] - '0';
+			one = true;
+		}
+	}
 
-	int x1, y1, x2, y2;
-	cin >> x1 >> y1 >> x2 >> y2;
-
-	int w, h;
-	cin >> w >> h;
-
-	int a = x1;
-	int b = W - x2;
-	int c = y1;
-	int d = H - y2;
-
-	if (c + d < h && a + b < w) {
-		cout << -1 << endl;
+	if (one) {
+		cout << 1 << nline;
+		cout << temp << nline;
 		return;
 	}
 
-	int adj_hor, adj_ver;
+	for (int i = 0 ; i < n ; i++) {
+		int num = s[i] - '0';
+		if (num == 1) {
+			for (int j = i + 1 ; j < n ; j++) {
+				if (s[j] == '2') {
+					cout << 2 << nline;
+					cout << 12 << nline;
+					return;
+				}
+				if (s[j] == '4') {
+					cout << 2 << nline;
+					cout << 14 << nline;
+					return;
+				}
+				if (s[j] == '5') {
+					cout << 2 << nline;
+					cout << 15 << nline;
+					return;
+				}
+				if (s[j] == '6') {
+					cout << 2 << nline;
+					cout << 16 << nline;
+					return;
+				}
+				if (s[j] == '8') {
+					cout << 2 << nline;
+					cout << 18 << nline;
+					return;
+				}
 
-	if (c + d >= h)
-		adj_ver = min(max(0ll, h - d), max(0ll, h - c));
-	else
-		adj_ver = INT_MAX;
+			}
+		}
+		else if (num == 2) {
+			for (int j = i + 1 ; j < n ; j++) {
+				if (s[j] == '1') {
+					cout << 2 << nline;
+					cout << 21 << nline;
+					return;
+				}
+				if (s[j] == '2') {
+					cout << 2 << nline;
+					cout << 22 << nline;
+					return;
+				}
+				if (s[j] == '4') {
+					cout << 2 << nline;
+					cout << 24 << nline;
+					return;
+				}
+				if (s[j] == '5') {
+					cout << 2 << nline;
+					cout << 25 << nline;
+					return;
+				}
+				if (s[j] == '6') {
+					cout << 2 << nline;
+					cout << 26 << nline;
+					return;
+				}
+				if (s[j] == '7') {
+					cout << 2 << nline;
+					cout << 27 << nline;
+					return;
+				}
+				if (s[j] == '8') {
+					cout << 2 << nline;
+					cout << 28 << nline;
+					return;
+				}
 
-	if (a + b >= w)
-		adj_hor = min(max(0ll, w - a), max(0ll, w - b));
-	else
-		adj_hor = INT_MAX;
+			}
+		}
+		else if (num == 3) {
+			for (int j = i + 1 ; j < n ; j++) {
+				if (s[j] == '2') {
+					cout << 2 << nline;
+					cout << 32 << nline;
+					return;
+				}
+				if (s[j] == '3') {
+					cout << 2 << nline;
+					cout << 33 << nline;
+					return;
+				}
+				if (s[j] == '4') {
+					cout << 2 << nline;
+					cout << 34 << nline;
+					return;
+				}
+				if (s[j] == '5') {
+					cout << 2 << nline;
+					cout << 35 << nline;
+					return;
+				}
+				if (s[j] == '6') {
+					cout << 2 << nline;
+					cout << 36 << nline;
+					return;
+				}
+				if (s[j] == '8') {
+					cout << 2 << nline;
+					cout << 38 << nline;
+					return;
+				}
+				if (s[j] == '9') {
+					cout << 2 << nline;
+					cout << 39 << nline;
+					return;
+				}
 
+			}
+		}
+		else if (num == 4) {
+			for (int j = i + 1 ; j < n ; j++) {
+				if (s[j] == '2') {
+					cout << 2 << nline;
+					cout << 42 << nline;
+					return;
+				}
+				if (s[j] == '4') {
+					cout << 2 << nline;
+					cout << 44 << nline;
+					return;
+				}
+				if (s[j] == '5') {
+					cout << 2 << nline;
+					cout << 45 << nline;
+					return;
+				}
+				if (s[j] == '6') {
+					cout << 2 << nline;
+					cout << 46 << nline;
+					return;
+				}
+				if (s[j] == '8') {
+					cout << 2 << nline;
+					cout << 48 << nline;
+					return;
+				}
+				if (s[j] == '9') {
+					cout << 2 << nline;
+					cout << 49 << nline;
+					return;
+				}
 
-	std::cout << std::fixed;
-	std::cout << std::setprecision(9);
+			}
+		}
+		else if (num == 5) {
+			for (int j = i + 1 ; j < n ; j++) {
+				if (s[j] == '1') {
+					cout << 2 << nline;
+					cout << 51 << nline;
+					return;
+				}
+				if (s[j] == '2') {
+					cout << 2 << nline;
+					cout << 52 << nline;
+					return;
+				}
+				if (s[j] == '4') {
+					cout << 2 << nline;
+					cout << 54 << nline;
+					return;
+				}
+				if (s[j] == '5') {
+					cout << 2 << nline;
+					cout << 55 << nline;
+					return;
+				}
+				if (s[j] == '6') {
+					cout << 2 << nline;
+					cout << 56 << nline;
+					return;
+				}
+				if (s[j] == '7') {
+					cout << 2 << nline;
+					cout << 57 << nline;
+					return;
+				}
+				if (s[j] == '8') {
+					cout << 2 << nline;
+					cout << 58 << nline;
+					return;
+				}
 
-	cout << double(min(adj_hor, adj_ver)) << endl;
+			}
+		}
+		else if (num == 6) {
+			for (int j = i + 1 ; j < n ; j++) {
+				if (s[j] == '2') {
+					cout << 2 << nline;
+					cout << 62 << nline;
+					return;
+				}
+				if (s[j] == '3') {
+					cout << 2 << nline;
+					cout << 63 << nline;
+					return;
+				}
+				if (s[j] == '4') {
+					cout << 2 << nline;
+					cout << 64 << nline;
+					return;
+				}
+				if (s[j] == '5') {
+					cout << 2 << nline;
+					cout << 65 << nline;
+					return;
+				}
+				if (s[j] == '6') {
+					cout << 2 << nline;
+					cout << 66 << nline;
+					return;
+				}
+				if (s[j] == '8') {
+					cout << 2 << nline;
+					cout << 68 << nline;
+					return;
+				}
+				if (s[j] == '9') {
+					cout << 2 << nline;
+					cout << 69 << nline;
+					return;
+				}
+
+			}
+		}
+		else if (num == 7) {
+			for (int j = i + 1 ; j < n ; j++) {
+				if (s[j] == '2') {
+					cout << 2 << nline;
+					cout << 72 << nline;
+					return;
+				}
+				if (s[j] == '4') {
+					cout << 2 << nline;
+					cout << 74 << nline;
+					return;
+				}
+				if (s[j] == '5') {
+					cout << 2 << nline;
+					cout << 75 << nline;
+					return;
+				}
+				if (s[j] == '6') {
+					cout << 2 << nline;
+					cout << 76 << nline;
+					return;
+				}
+				if (s[j] == '7') {
+					cout << 2 << nline;
+					cout << 77 << nline;
+					return;
+				}
+				if (s[j] == '8') {
+					cout << 2 << nline;
+					cout << 78 << nline;
+					return;
+				}
+				
+
+			}
+		}
+		else if (num == 8) {
+			for (int j = i + 1 ; j < n ; j++) {
+				if (s[j] == '1') {
+					cout << 2 << nline;
+					cout << 81 << nline;
+					return;
+				}
+				if (s[j] == '2') {
+					cout << 2 << nline;
+					cout << 82 << nline;
+					return;
+				}
+				if (s[j] == '4') {
+					cout << 2 << nline;
+					cout << 84 << nline;
+					return;
+				}
+				if (s[j] == '5') {
+					cout << 2 << nline;
+					cout << 85 << nline;
+					return;
+				}
+				if (s[j] == '6') {
+					cout << 2 << nline;
+					cout << 86 << nline;
+					return;
+				}
+				if (s[j] == '7') {
+					cout << 2 << nline;
+					cout << 87 << nline;
+					return;
+				}
+				if (s[j] == '8') {
+					cout << 2 << nline;
+					cout << 88 << nline;
+					return;
+				}
+
+			}
+		}
+		else {
+			for (int j = i + 1 ; j < n ; j++) {
+				if (s[j] == '1') {
+					cout << 2 << nline;
+					cout << 91 << nline;
+					return;
+				}
+				if (s[j] == '2') {
+					cout << 2 << nline;
+					cout << 92 << nline;
+					return;
+				}
+				if (s[j] == '3') {
+					cout << 2 << nline;
+					cout << 92 << nline;
+					return;
+				}
+				if (s[j] == '4') {
+					cout << 2 << nline;
+					cout << 94 << nline;
+					return;
+				}
+				if (s[j] == '5') {
+					cout << 2 << nline;
+					cout << 95 << nline;
+					return;
+				}
+				if (s[j] == '6') {
+					cout << 2 << nline;
+					cout << 96 << nline;
+					return;
+				}
+				if (s[j] == '8') {
+					cout << 2 << nline;
+					cout << 98 << nline;
+					return;
+				}
+				if (s[j] == '9') {
+					cout << 2 << nline;
+					cout << 99 << nline;
+					return;
+				}
+
+			}
+		}
+	}
+
 }
 
 
