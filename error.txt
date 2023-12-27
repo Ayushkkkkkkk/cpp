@@ -1,0 +1,17 @@
+ct [ 2 0 1 0 2 1 1 ]
+"we" we
+j 2
+"we" we
+ct [ 2 2 0 1 2 ]
+"we" we
+"we" we
+j 3
+"we" we
+ct [ 1 0 ]
+ct [ 2 2 2 2 2 2 ]
+"we" we
+"we" we
+"we" we
+"we" we
+"we" we
+"we" we
