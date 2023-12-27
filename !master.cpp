@@ -186,6 +186,9 @@ void test() {
 				if(ct[j] == 2){
 					break;
 				}
+				if(ct[j] == 1){
+					break;
+				}
 				if(ct[j] == 0){
 					found = true;
 					sum += 2;
