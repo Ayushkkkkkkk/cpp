@@ -135,74 +135,65 @@ template<typename T, typename U> void umax(T& a, U b) {if (a < b) a = b;}
 
 
 
-
-
 void test() {
-	int n ; cin >> n ;
-	vector<string> vec(2);
-	vector<int> ct;
-	for (int i = 0 ; i < 2 ; i++){
-		cin >> vec[i];
+	int n , m ; cin >> n >> m ;
+	vector<int> a(m);
+	for (int i = 0 ; i < m ; i++){
+		cin >> a[i];
 	}
-	for (int i = 0 ; i < n ; i++){
-		if(vec[0][i] == '0' && vec[1][i]=='1'){
-			ct.push_back(2);
-		}
-		else if(vec[0][i] == '1' && vec[1][i] == '0'){
-			ct.push_back(2);
-		}
-		else if(vec[0][i] == '1' && vec[1][i] == '1'){
-			ct.push_back(0);
-		}
-		else{
-			ct.push_back(1);
-		}
-	}
-	debug(ct);
-	
+	vector<int> seating_arrangeMent = a;
+	sort(seating_arrangeMent.begin() , seating_arrangeMent.end());
+	debug(a);
+	debug(seating_arrangeMent);
+	vector<int> where;
+	vector<bool> check(m , false);
 	int sum = 0;
-	for (int i = 0 ; i < n ; i++){
-		if(ct[i] == 2){
-			debug("we");
-			sum += 2;
-			continue;
-		}
-		else if(ct[i] == 0){
-			for (int j = i + 1 ; j < n ; j++){
-				if(ct[j] == 2){
-					break;
-				}
-				if(ct[j] == 1){
-					debug(j);
-					sum += 2;
-					i = j ;
-					break;
-				}
+	for (int i = 0 ; i < m ; i++){
+		int elem = a[i];
+		for (int j = 0 ; j < m ; j++){
+			if(elem == seating_arrangeMent[j] && !check[j]){
+				check[j] = true;
+				where.push_back(j + 1);
+			}
+			else {
+				continue;
 			}
 		}
-		else if(ct[i] == 1){
-			bool found = false;
-			for (int j = i + 1 ; j < n ; j++){
-				if(ct[j] == 2){
-					break;
-				}
-				if(ct[j] == 1){
-					break;
-				}
-				if(ct[j] == 0){
-					found = true;
-					sum += 2;
-					i = j;
-					break;
-				}
-			}
-			if(!found){
-				sum += 1;
-			}
-		}
-		
 	}
-	cout << sum << nline;
+	
+	
+	debug(where);
+	vector<int> sum_of_every(m , 0);
+	vector<int> VOIDARR(m , -1);
+	for (int i = 0 ; i < m ; i++){
+		int elem = a[i];
+		int dest = where[i] - 1;
+		int count = 0;
+		for (int j = 0 ; j < where[i] ; j++){
+			if(VOIDARR[j] != -1){
+				count++;
+			}
+			if(j == dest){
+				VOIDARR[j] = elem;
+			}
+		}
+		sum_of_every[i] = count;
+		sum += count;
+	}
+
+	unordered_map<ll , ll> mpp;
+	int c = 0;
+	
+	for (int i = 1 ; i < n*m ; i++){
+		for (int j = 0 ; j < i ; j++){
+			debug(j);
+			debug(i);
+			if(a[j] < a[i])
+				c++;
+		}
+	}
+	cout << c << nline;
+	
 }
 
 
