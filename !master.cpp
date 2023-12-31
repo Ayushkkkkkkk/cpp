@@ -131,69 +131,107 @@ template<typename T, typename U> void umax(T& a, U b) {if (a < b) a = b;}
 #define FOR(...) F_ORC(__VA_ARGS__)(__VA_ARGS__)
 #define EACH(x, a) for (auto& x: a)
 
+struct Factorial {
+	vector<ll> factorial;
+	vector<ll> inverseFactorial;
+	int modulo;
 
+	ll modularBinaryExponentation(int base , int exponent) {
+		if (exponent == 0) {
+			return 1;
+		}
 
+		ll result = modularBinaryExponentation(base , exponent / 2);
 
-
-void test() {
-	int n , m ; cin >> n >> m ;
-	vector<int> a(m);
-	for (int i = 0 ; i < m ; i++){
-		cin >> a[i];
+		if (exponent % 2 == 1) {
+			return (((result * result) % modulo) * base) % modulo;
+		}
+		else {
+			return (result * result) % modulo;
+		}
 	}
-	vector<int> seating_arrangeMent = a;
-	sort(seating_arrangeMent.begin() , seating_arrangeMent.end());
-	debug(a);
-	debug(seating_arrangeMent);
+	Factorial(int n , int _modulo) {
+		factorial.resize(n + 1);
+		inverseFactorial.resize(n + 1);
+		modulo = _modulo;
+		factorial[0] = 1;
+		inverseFactorial[0] = 1;
+		for (ll i = 1 ; i <= n ; i++) {
+			factorial[i] = (i * factorial[i - 1]) % modulo;
+			inverseFactorial[i] = modularBinaryExponentation(factorial[i] , modulo - 2);
+		}
+	}
+	int FactorialOf(int x) {
+		return factorial[x];
+	}
+	int inverseOF(int x) {
+		return inverseFactorial[x];
+	}
+	int binomialCofficientOf(int a , int b) {
+		return (((factorial[a] * inverseFactorial[a - b]) % modulo) * inverseFactorial[b]) % modulo;
+	}
+
+	int multinomialCoefficientOf(vector<int> &buckets) {
+		int sum = 0 ;
+		for (int bucket : buckets) {
+			sum += bucket;
+		}
+		ll result = FactorialOf(sum);
+
+		for (int bucket : buckets)
+			result = (result * inverseOF(bucket)) %  modulo;
+		return result;
+	}
+};
+
+
+const int MOD = 1e9 + 7;
+void test() {
+	int n ; cin >> n ;
+	string s ; cin >> s;
+	int count = 0;
+	Factorial fc = Factorial(200 , MOD);
 	vector<int> where;
-	vector<bool> check(m , false);
-	int sum = 0;
-	for (int i = 0 ; i < m ; i++){
-		int elem = a[i];
-		for (int j = 0 ; j < m ; j++){
-			if(elem == seating_arrangeMent[j] && !check[j]){
-				check[j] = true;
-				where.push_back(j + 1);
+	for (int i = 0 ; i < n ; i++) {
+		if (s[i] == '2') {
+			count++;
+			where.push_back(i);
+		}
+	}
+	int NcK = fc.binomialCofficientOf(count , 2);
+
+	vector<vector<char>> mat(n , vector<char>(n , '.'));
+	if (count < 3 && count != 0) {
+		cout << "NO" << nline;
+		return;
+	}
+
+	for (int i = 0 ; i < n ; i++) {
+		for (int j = 0 ; j < n ; j++) {
+			if (i == j) {
+				mat[i][j] = 'X';
 			}
 			else {
-				continue;
+				mat[i][j] = '=';
 			}
 		}
-	}
-	
-	
-	debug(where);
-	vector<int> sum_of_every(m , 0);
-	vector<int> VOIDARR(m , -1);
-	for (int i = 0 ; i < m ; i++){
-		int elem = a[i];
-		int dest = where[i] - 1;
-		int count = 0;
-		for (int j = 0 ; j < where[i] ; j++){
-			if(VOIDARR[j] != -1){
-				count++;
-			}
-			if(j == dest){
-				VOIDARR[j] = elem;
-			}
-		}
-		sum_of_every[i] = count;
-		sum += count;
 	}
 
-	unordered_map<ll , ll> mpp;
-	int c = 0;
-	
-	for (int i = 1 ; i < n*m ; i++){
-		for (int j = 0 ; j < i ; j++){
-			debug(j);
-			debug(i);
-			if(a[j] < a[i])
-				c++;
-		}
+	debug(where);
+	for (int i = 0 ; i < where.size() ; i++) {
+		mat[where[i]][where[(i + 1) % where.size()]] = '+';
+		mat[where[(i + 1) % where.size()]][where[i]] = '-';
 	}
-	cout << c << nline;
-	
+
+	debug(mat);
+	cout << "YES" << nline;
+	for (int i = 0 ; i < n ; i++){
+		for (int j = 0 ; j < n ; j++){
+			cout << mat[i][j];
+		}
+		cout << nline;
+	}
+
 }
 
 
