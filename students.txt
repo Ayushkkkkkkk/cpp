@@ -1,0 +1,3 @@
+Ayush 280
+Alice 300
+Eve 250

@@ -131,109 +131,81 @@ template<typename T, typename U> void umax(T& a, U b) {if (a < b) a = b;}
 #define FOR(...) F_ORC(__VA_ARGS__)(__VA_ARGS__)
 #define EACH(x, a) for (auto& x: a)
 
-struct Factorial {
-	vector<ll> factorial;
-	vector<ll> inverseFactorial;
-	int modulo;
 
-	ll modularBinaryExponentation(int base , int exponent) {
-		if (exponent == 0) {
-			return 1;
-		}
+		
 
-		ll result = modularBinaryExponentation(base , exponent / 2);
-
-		if (exponent % 2 == 1) {
-			return (((result * result) % modulo) * base) % modulo;
+const lld R = 1000 * 1000 * 1000 + 7; // a^(R-1) = 1 (mod R)
+const lld matrixRemainder = R-1;		
+		
+		
+class matrix{
+public:
+	
+	// Attributes
+	int row, col;
+	std::vector<std::vector<lld>> num;
+	
+	// Constructor
+	matrix(int row, int col, int defaultValue = 0){
+		this->num = std::vector<std::vector<lld>>(row, std::vector<lld>(col, defaultValue));
+		this->row = row, this->col = col;
+	}
+	matrix(std::vector<std::vector<lld>> num){
+		this->num = num;
+		this->row = this->num.size();
+		this->col = this->num[0].size();
+	}
+	
+	// Operator
+	matrix operator *(matrix &another){
+		if(this->col != another.row){
+			printf("Wrong size: %d*%d X %d*%d\n", this->row, this->col, another.row, another.col);
+			throw "Wrong size";
 		}
-		else {
-			return (result * result) % modulo;
+		matrix newone(this->row, another.col);
+		for(int r=0; r<newone.row; r++) for(int c=0; c<newone.col; c++){
+			for(int k=0; k<this->col; k++){	
+				newone.num[r][c] += this->num[r][k] * another.num[k][c];
+				newone.num[r][c] %= matrixRemainder;
+			}
+		} return newone;
+	}	
+	
+	// Power
+	matrix operator ^(lld x){
+		if(x==0){
+			printf("Not implemented yet.\n");
+			throw "Not implemented";
 		}
-	}
-	Factorial(int n , int _modulo) {
-		factorial.resize(n + 1);
-		inverseFactorial.resize(n + 1);
-		modulo = _modulo;
-		factorial[0] = 1;
-		inverseFactorial[0] = 1;
-		for (ll i = 1 ; i <= n ; i++) {
-			factorial[i] = (i * factorial[i - 1]) % modulo;
-			inverseFactorial[i] = modularBinaryExponentation(factorial[i] , modulo - 2);
+		else if(x==1) return *this;
+		else{
+			matrix halfpower = (*this) ^ (x/2);
+			if(x%2 == 0) return halfpower * halfpower;
+			else return halfpower * halfpower * (*this);
 		}
-	}
-	int FactorialOf(int x) {
-		return factorial[x];
-	}
-	int inverseOF(int x) {
-		return inverseFactorial[x];
-	}
-	int binomialCofficientOf(int a , int b) {
-		return (((factorial[a] * inverseFactorial[a - b]) % modulo) * inverseFactorial[b]) % modulo;
-	}
-
-	int multinomialCoefficientOf(vector<int> &buckets) {
-		int sum = 0 ;
-		for (int bucket : buckets) {
-			sum += bucket;
-		}
-		ll result = FactorialOf(sum);
-
-		for (int bucket : buckets)
-			result = (result * inverseOF(bucket)) %  modulo;
-		return result;
 	}
 };
 
 
+
+
 const int MOD = 1e9 + 7;
+
+
 void test() {
-	int n ; cin >> n ;
-	string s ; cin >> s;
-	int count = 0;
-	Factorial fc = Factorial(200 , MOD);
-	vector<int> where;
-	for (int i = 0 ; i < n ; i++) {
-		if (s[i] == '2') {
-			count++;
-			where.push_back(i);
-		}
-	}
-	int NcK = fc.binomialCofficientOf(count , 2);
-
-	vector<vector<char>> mat(n , vector<char>(n , '.'));
-	if (count < 3 && count != 0) {
-		cout << "NO" << nline;
-		return;
-	}
-
-	for (int i = 0 ; i < n ; i++) {
-		for (int j = 0 ; j < n ; j++) {
-			if (i == j) {
-				mat[i][j] = 'X';
-			}
-			else {
-				mat[i][j] = '=';
-			}
-		}
-	}
-
-	debug(where);
-	for (int i = 0 ; i < where.size() ; i++) {
-		mat[where[i]][where[(i + 1) % where.size()]] = '+';
-		mat[where[(i + 1) % where.size()]][where[i]] = '-';
-	}
-
-	debug(mat);
-	cout << "YES" << nline;
-	for (int i = 0 ; i < n ; i++){
-		for (int j = 0 ; j < n ; j++){
-			cout << mat[i][j];
-		}
-		cout << nline;
-	}
-
+	 ll n,k;
+        cin>>n>>k;
+        ll p = 1;
+        ll ans = 0;
+        f(j,0,31){
+            if(k & (1<<j)){
+                ans = (ans + p) % INF;
+            }
+            p *= n;
+            p %= INF;
+        }
+        cout<<ans<<"\n";
 }
-
 
 
 int32_t main() {
@@ -244,5 +216,3 @@ int32_t main() {
 		test();
 	}
 }
-
-

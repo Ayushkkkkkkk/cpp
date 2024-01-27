@@ -26,16 +26,17 @@ void dfs(int vertex){
 
 
 void solve(){
-	int n , m ; cin >> n >> m;
+	cout << "hello" << endl;
+	// int n , m ; cin >> n >> m;
 	
-	for (int i = 0 ; i < m ; i++){
-		int v1 , v2 ; cin >> v1 >> v2;
+	// for (int i = 0 ; i < m ; i++){
+	// 	int v1 , v2 ; cin >> v1 >> v2;
 		
-		graph[v1].push_back(v2);
-		graph[v2].push_back(v1);
+	// 	graph[v1].push_back(v2);
+	// 	graph[v2].push_back(v1);
 		
 		
-	}
+	// }
 }
 
 
