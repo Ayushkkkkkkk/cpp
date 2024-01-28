@@ -131,80 +131,61 @@ template<typename T, typename U> void umax(T& a, U b) {if (a < b) a = b;}
 #define FOR(...) F_ORC(__VA_ARGS__)(__VA_ARGS__)
 #define EACH(x, a) for (auto& x: a)
 
-
-		
-
-const lld R = 1000 * 1000 * 1000 + 7; // a^(R-1) = 1 (mod R)
-const lld matrixRemainder = R-1;		
-		
-		
-class matrix{
-public:
-	
-	// Attributes
-	int row, col;
-	std::vector<std::vector<lld>> num;
-	
-	// Constructor
-	matrix(int row, int col, int defaultValue = 0){
-		this->num = std::vector<std::vector<lld>>(row, std::vector<lld>(col, defaultValue));
-		this->row = row, this->col = col;
-	}
-	matrix(std::vector<std::vector<lld>> num){
-		this->num = num;
-		this->row = this->num.size();
-		this->col = this->num[0].size();
-	}
-	
-	// Operator
-	matrix operator *(matrix &another){
-		if(this->col != another.row){
-			printf("Wrong size: %d*%d X %d*%d\n", this->row, this->col, another.row, another.col);
-			throw "Wrong size";
-		}
-		matrix newone(this->row, another.col);
-		for(int r=0; r<newone.row; r++) for(int c=0; c<newone.col; c++){
-			for(int k=0; k<this->col; k++){	
-				newone.num[r][c] += this->num[r][k] * another.num[k][c];
-				newone.num[r][c] %= matrixRemainder;
-			}
-		} return newone;
-	}	
-	
-	// Power
-	matrix operator ^(lld x){
-		if(x==0){
-			printf("Not implemented yet.\n");
-			throw "Not implemented";
-		}
-		else if(x==1) return *this;
-		else{
-			matrix halfpower = (*this) ^ (x/2);
-			if(x%2 == 0) return halfpower * halfpower;
-			else return halfpower * halfpower * (*this);
-		}
-	}
+struct UF {
+    int n;
+    vector<int> par;
+    UF(int _n) : n(_n) {
+        for(int i = 0; i < n; i++) par.push_back(i);
+    }
+    int find(int a){
+        if(a != par[a]) par[a] = find(par[a]);
+        return par[a];
+    }
+    bool join(int a, int b){
+        a = find(a);
+        b = find(b);
+        par[a] = b;
+        return (a != b);
+    }
 };
 
-
-
-
-const int MOD = 1e9 + 7;
-
-
+	
 void test() {
-	 ll n,k;
-        cin>>n>>k;
-        ll p = 1;
-        ll ans = 0;
-        f(j,0,31){
-            if(k & (1<<j)){
-                ans = (ans + p) % INF;
-            }
-            p *= n;
-            p %= INF;
-        }
-        cout<<ans<<"\n";
+	int n ; cin >> n ;
+	vector<vector<int>> a(n , vector<int>(5 , 0));
+	for (int i = 0 ; i < n ; i++){
+		for (int j = 0 ; j < 5 ; j++){
+			cin >> a[i][j];
+		}
+	}
+	
+	debug(a);
+	vector<int> weeks(5);
+	for (int i = 0 ; i < weeks.size() ; i++){
+		weeks[i] = 0;
+	}
+	for (int i = 0 ; i < 5 ; i++){
+		for (int j = 0 ; j < n ; j++){
+			if(a[j][i] == 1){
+				weeks[i] += 1;
+			}
+		}
+	}
+	debug(weeks);
+	int count = 0;
+	for (int i = 0 ; i < weeks.size() ; i++){
+		if(weeks[i] >= (n / 2)){
+			count++;
+		}
+	}
+	
+	debug(count);
+	if(count >= (n / 2)){
+		cout << "YES" << nline;
+	}
+	else{
+		cout << "NO" << nline;
+	}			
 }
 
 
