@@ -132,289 +132,240 @@ template<typename T, typename U> void umax(T& a, U b) {if (a < b) a = b;}
 #define EACH(x, a) for (auto& x: a)
 
 
-const int basen = 8;
-const int base = pow(10, basen);
-vector<vector<uint32_t>> prec10 = {{uint32_t(base)}};
-vector<vector<int>> prec2 = {{(1ll << 32) % base, (1ll << 32) / base}};
 
-// with doubles up to a.size() = b.size() = 3e4
-#ifdef BIGINT_USE_FFT
-vector<uint32_t> _mul_fft_(const vector<uint32_t> &a, const vector<uint32_t> &b) {
-    vector<int> ta(a.size() * 2), tb(b.size() * 2);
-    for (int i = 0; i < a.size(); ++i) {
-        ta[i * 2] = (a[i] & uint16_t(-1));
-        ta[i * 2 + 1] = (a[i] >> 16);
-    }
-    for (int i = 0; i < b.size(); ++i) {
-        tb[i * 2] = (b[i] & uint16_t(-1));
-        tb[i * 2 + 1] = (b[i] >> 16);
-    }
-    auto tc = fft::multiply(ta, tb);
-    tc.resize(tc.size() + 5, 0);
-    for (int i = 0; i + 1 < tc.size(); ++i) {
-        tc[i + 1] += (tc[i] >> 16);
-        tc[i] &= uint16_t(-1);
-    }
-    vector<uint32_t> res(tc.size() / 2);
-    for (int i = 0; i < res.size(); ++i) {
-        res[i] = ((uint32_t(tc[i * 2 + 1]) << 16) ^ uint32_t(tc[i * 2]));
-    }
-    while (!res.empty() && res.back() == 0)
-        res.pop_back();
-    return res;
-}
-#endif
+namespace var_mint_ns {
+struct VarModular {
+    using value_type = int;
+  private:
+    static value_type P;
+  public:
+    value_type value;
 
-vector<uint32_t> _mul_(const vector<uint32_t> &a, const vector<uint32_t> &b) {
-    if (a.empty() || b.empty()) return {};
-    #ifdef BIGINT_USE_FFT
-    if (min(a.size(), b.size()) > 350)
-        return _mul_fft_(a, b);
-    #endif
-    vector<uint64_t> tmp(a.size() + b.size() + 1, 0);
+    VarModular(long long k = 0) : value(norm(k)) {}
 
-    for (int i = 0; i < a.size(); ++i) {
-        for (int j = 0; j < b.size(); ++j) {
-            uint64_t prod = uint64_t(a[i]) * b[j];
-            tmp[i + j] += (prod & uint32_t(-1));
-            tmp[i + j + 1] += (prod >> 32);
-        }
+    friend VarModular& operator += (      VarModular& n, const VarModular& m) { n.value += m.value; if (n.value >= P) n.value -= P; return n; }
+    friend VarModular  operator +  (const VarModular& n, const VarModular& m) { VarModular r = n; return r += m; }
+
+    friend VarModular& operator -= (      VarModular& n, const VarModular& m) { n.value -= m.value; if (n.value < 0)    n.value += P; return n; }
+    friend VarModular  operator -  (const VarModular& n, const VarModular& m) { VarModular r = n; return r -= m; }
+    friend VarModular  operator -  (const VarModular& n)                      { return VarModular(-n.value); }
+
+    friend VarModular& operator *= (      VarModular& n, const VarModular& m) { n.value = reduce(n.value * 1ll * m.value); return n; }
+    friend VarModular  operator *  (const VarModular& n, const VarModular& m) { VarModular r = n; return r *= m; }
+
+    friend VarModular& operator /= (      VarModular& n, const VarModular& m) { return n *= m.inv(); }
+    friend VarModular  operator /  (const VarModular& n, const VarModular& m) { VarModular r = n; return r /= m; }
+
+    VarModular& operator ++ (   ) { return *this += 1; }
+    VarModular& operator -- (   ) { return *this -= 1; }
+    VarModular  operator ++ (int) { VarModular r = *this; *this += 1; return r; }
+    VarModular  operator -- (int) { VarModular r = *this; *this -= 1; return r; }
+
+    friend bool operator == (const VarModular& n, const VarModular& m) { return n.value == m.value; }
+    friend bool operator != (const VarModular& n, const VarModular& m) { return n.value != m.value; }
+
+    explicit    operator       int() const { return value; }
+    explicit    operator      bool() const { return value; }
+    explicit    operator long long() const { return value; }
+
+    static value_type           mod()      { return     P; }
+
+    value_type norm(long long k) {
+        if (!(-P <= k && k < P)) k %= P;
+        if (k < 0) k += P;
+        return k;
     }
 
-    for (int i = 0; i + 1 < tmp.size(); ++i) {
-        tmp[i + 1] += (tmp[i] >> 32);
-        tmp[i] &= uint32_t(-1);
+    VarModular inv() const {
+        value_type a = value, b = P, x = 0, y = 1;
+        while (a != 0) { value_type k = b / a; b -= k * a; x -= k * y; swap(a, b); swap(x, y); }
+        return VarModular(x);
     }
 
-    vector<uint32_t> c(tmp.begin(), tmp.end());
+  private:
+    static uint64_t m;
+  public:
+    static void set_mod(value_type mod) {
+        m = (__uint128_t(1) << 64) / mod;
+        P = mod;
+    }
 
-    while (!c.empty() && c.back() == 0) c.pop_back();
-    return c;
+    static value_type reduce(uint64_t a) {
+        uint64_t q = ((__uint128_t(m) * a) >> 64);
+        a -= q * P;
+        if (a >= P)
+            a -= P;
+        return a;
+    }
 };
-
-// works with doubles with v.size() up to 3e5
-vector<uint32_t> convert(const vector<int> &v) {
-    auto _add_ = [](vector<uint32_t> &a, const vector<uint32_t> &b) {
-        a.resize(max(a.size(), b.size()) + 1, 0);
-
-        uint32_t carry = 0;
-        int i;
-        for (i = 0; i < b.size(); ++i) {
-            a[i] += b[i];
-            uint32_t next_carry = (a[i] < b[i]);
-            a[i] += carry;
-            next_carry |= (carry && a[i] == 0);
-            swap(carry, next_carry);
-        }
-
-        while (carry) {
-            if ((++a[i++]) != 0)
-                break;
-        }
-
-        while (!a.empty() && a.back() == 0) a.pop_back();
-    };
-
-    while ((1 << prec10.size()) < v.size()) {
-        prec10.emplace_back(_mul_(prec10.back(), prec10.back()));
+uint64_t VarModular::m = 0;
+VarModular pow(VarModular m, long long p) {
+    VarModular r(1);
+    while (p) {
+        if (p & 1) r *= m;
+        m *= m;
+        p >>= 1;
     }
+    return r;
+}
+VarModular::value_type VarModular::P;
+// use "VarModular::set_mod([your value])" later
 
-    using It = vector<int>::const_iterator;
-    function<vector<uint32_t>(It, It, int)> conv = [&](It it1, It it2, int hint) {
-        if (it1 + 1 == it2) {
-            return vector{uint32_t(*it1)};
-        }
+ostream& operator << (ostream& o, const VarModular& m) { return o << m.value; }
+istream& operator >> (istream& i,       VarModular& m) { long long k; i >> k; m.value = m.norm(k); return i; }
+string   to_string(const VarModular& m) { return to_string(m.value); }
 
-        int ln = it2 - it1;
-        while ((1 << hint) >= ln) --hint;
-        assert(1 << (hint + 1) >= ln);
+using Mint = VarModular;
+// using Mint = long double;
 
-        auto imid = it1 + (1 << hint);
+vector<Mint> f, fi;
+void init_C(int n) {
+    f.assign(n, 1); fi.assign(n, 1);
+    for (int i = 2; i < n; ++i) f[i] = f[i - 1] * i;
+    fi.back() = Mint(1) / f.back();
+    for (int i = n - 2; i >= 0; --i) fi[i] = fi[i + 1] * (i + 1);
+}
+Mint C(int n, int k) {
+    if (k < 0 || k > n) return 0;
+    else return f[n] * fi[k] * fi[n - k];
+}
+}
+using namespace var_mint_ns;
 
-        auto vl = conv(it1, imid, hint - 1);
-        auto vr = conv(imid, it2, hint - 1);
 
-        vr = _mul_(vr, prec10[hint]);
-        _add_(vr, vl);
+template<class Fun>
+class y_combinator_result {
+    Fun fun_;
+public:
+    template<class T>
+    explicit y_combinator_result(T &&fun): fun_(std::forward<T>(fun)) {}
 
-        return vr;
-    };
-
-    return conv(v.begin(), v.end(), prec10.size() - 1);
+    template<class ...Args>
+    decltype(auto) operator()(Args &&...args) {
+        return fun_(std::ref(*this), std::forward<Args>(args)...);
+    }
+};
+template<class Fun>
+decltype(auto) y_combinator(Fun &&fun) {
+    return y_combinator_result<std::decay_t<Fun>>(std::forward<Fun>(fun));
 }
 
-// works with doubles up to 3e6 or more
-vector<int> convert(const vector<uint32_t> &v) {
-    const int basen = 8;
-    const int base = pow(10, basen);
-    auto _add_ = [&](vector<int> &a, const vector<int> &b) {
-        a.resize(max(a.size(), b.size()) + 1, 0);
-        for (int i = 0; i < b.size(); ++i)
-            a[i] += b[i];
-        for (int i = 0; i + 1 < b.size() || a[i] >= base; ++i) {
-            if (a[i] >= base) {
-                a[i] -= base;
-                ++a[i + 1];
+vector<vector<int>> dominator_tree(vector<vector<int>> g, int root) {
+    int n = g.size();
+    vector<int> p(n);
+    for (int i = 0; i < n; ++i) {
+        p[i] = i;
+    }
+    swap(p[root], p[0]);
+    swap(g[0], g[root]);
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < g[i].size(); ++j) {
+            g[i][j] = p[g[i][j]];
+        }
+    }
+    vector<vector<int>> tree(n);
+    vector<vector<int>> bucket(n);
+    vector<int> sdom(n), dom(n), par(n), label(n), dsu(n);
+    vector<vector<int>> gi(n);
+    vector<int> arr(n, -1), rev(n);
+    int tm = 0;
+
+    function<int(int, int)> ask = [&](int u, int x) {
+        if (u == dsu[u]) return x ? -1 : u;
+        int v = ask(dsu[u], x + 1);
+        if (v < 0) return u;
+        if (sdom[label[dsu[u]]] < sdom[label[u]])
+            label[u] = label[dsu[u]];
+        dsu[u] = v;
+        return x ? v : label[u];
+    };
+    auto un = [&](int u, int v) {
+        dsu[v] = u;
+    };
+
+    function<void(int)> dfs = [&](int v) {
+        arr[v] = tm;
+        rev[tm] = v;
+        label[tm] = sdom[tm] = dsu[tm] = tm;
+        ++tm;
+        for (int k : g[v]) {
+            if (arr[k] == -1) {
+                dfs(k);
+                par[arr[k]] = arr[v];
             }
+            gi[arr[k]].pb(arr[v]);
         }
-        while (!a.empty() && a.back() == 0)
-            a.pop_back();
     };
+    dfs(0);
+    assert(tm == n);  // connected
 
-    auto _slow_mult_ = [&](const vector<int> &a, const vector<int> &b) {
-        vector<long long> tmp(a.size() + b.size() + 1, 0);
-        for (int i = 0; i < a.size(); ++i) {
-            for (int j = 0; j < b.size(); ++j) {
-                long long prod = 1ll * a[i] * b[j];
-                long long div = prod / base;
-                tmp[i + j] += prod - base * div;
-                tmp[i + j + 1] += div;
-            }
+    for (int i = n - 1; i >= 0; --i) {
+        for (int j : gi[i]) {
+            sdom[i] = min(sdom[i], sdom[ask(j, 0)]);
         }
-        for (int i = 0; i + 1 < tmp.size(); ++i) {
-            long long div = tmp[i] / base;
-            tmp[i + 1] += div;
-            tmp[i] -= div * base;
+        if (i != 0) bucket[sdom[i]].pb(i);
+        for (int w : bucket[i]) {
+            int v = ask(w, 0);
+            if (sdom[v] == sdom[w]) dom[w] = sdom[w];
+            else dom[w] = v;
         }
-        while (!tmp.empty() && tmp.back() == 0)
-            tmp.pop_back();
-        return vector<int>(tmp.begin(), tmp.end());
-    };
-
-    #ifdef BIGINT_USE_FFT
-    auto _fft_mult_ = [&](const vector<int> &a, const vector<int> &b) {
-        vector<int> ta(a.size() * 2), tb(b.size() * 2);
-        static_assert(basen % 2 == 0, "basen has to be even");
-        const static int M = pow(10, basen / 2);
-        for (int i = 0; i < a.size(); ++i) {
-            ta[i * 2] = a[i] % M;
-            ta[i * 2 + 1] = a[i] / M;
-        }
-        for (int i = 0; i < b.size(); ++i) {
-            tb[i * 2] = b[i] % M;
-            tb[i * 2 + 1] = b[i] / M;
-        }
-        auto tc = fft::multiply(ta, tb);
-        tc.resize(tc.size() / 2 * 2 + 10, 0);
-        for (int i = 0; i + 1 < tc.size(); ++i) {
-            tc[i + 1] += tc[i] / M;
-            tc[i] %= M;
-        }
-        vector<int> res(tc.size() / 2);
-        for (int i = 0; i < res.size(); ++i)
-            res[i] = tc[i * 2] + tc[i * 2 + 1] * M;
-        while (!res.empty() && res.back() == 0)
-            res.pop_back();
-        return res;
-    };
-    #endif
-
-    auto _mult_ = [&](const vector<int> &a, const vector<int> &b) {
-        #ifdef BIGINT_USE_FFT
-        if (min(a.size(), b.size()) > 380) {
-            return _fft_mult_(a, b);
-        }
-        #endif
-
-        return _slow_mult_(a, b);
-    };
-
-    while ((1 << prec2.size()) < v.size()) {
-        prec2.emplace_back(_mult_(prec2.back(), prec2.back()));
+        if (i != 0) un(par[i], i);
+    }
+    for (int i = 1; i < n; ++i) {
+        if (dom[i] != sdom[i])
+            dom[i] = dom[dom[i]];
+        tree[rev[dom[i]]].pb(rev[i]);
+        tree[rev[i]].pb(rev[dom[i]]);
     }
 
-    using It = vector<uint32_t>::const_iterator;
-    function<vector<int>(It, It, int)> conv = [&](It it1, It it2, int hint) {
-        if (it1 + 1 == it2) {
-            return vector{int((*it1) % base), int((*it1) / base)};
-        }
-
-        int ln = it2 - it1;
-        while ((1 << hint) >= ln) --hint;
-        assert(1 << (hint + 1) >= ln);
-
-        auto imid = it1 + (1 << hint);
-
-        auto vl = conv(it1, imid, hint - 1);
-        auto vr = conv(imid, it2, hint - 1);
-
-        vr = _mult_(vr, prec2[hint]);
-        _add_(vr, vl);
-
-        return vr;
-    };
-
-    return conv(v.begin(), v.end(), prec2.size() - 1);
-}
-
-int rem(const vector<uint32_t> &v, int mod) {
-    ll ans = 0;
-    for (int i = (int)v.size() - 1; i >= 0; --i) {
-        ans = ((ans << 32) + v[i]) % mod;
-    }
-    return ans;
-}
-
-int rem(const vector<int> &v, int mod) {
-    ll ans = 0;
-    for (int i = (int)v.size() - 1; i >= 0; --i) {
-        ans = ((ans * base) + v[i]) % mod;
-    }
-    return ans;
-}
-
-string to_string(const vector<uint32_t> &v) {
-    if (v.empty()) return "0";
-    string res;
-    for (int i = (int)v.size() - 1; i >= 0; --i) {
-        for (int j = 31; j >= 0; --j) {
-            char c = '0' + ((v[i] >> j) & 1);
-            if (c == '0' && res.empty()) continue;
-            res += c;
+    swap(tree[root], tree[0]);
+    for (int i = 0; i < tree.size(); ++i) {
+        for (int j = 0; j < tree[i].size(); ++j) {
+            tree[i][j] = p[tree[i][j]];
         }
     }
-    return res;
+
+    return tree;
 }
 
 
 
-	
+
+
 void test() {
-	int n ; cin >> n ;
-	vector<vector<int>> a(n , vector<int>(5 , 0));
-	for (int i = 0 ; i < n ; i++){
-		for (int j = 0 ; j < 5 ; j++){
-			cin >> a[i][j];
-		}
+	int n ; cin >> n;
+	vector<int> a(n) , temp(n);
+	for (int i = 0 ; i < n ; i++) {
+		cin >> a[i];
 	}
-	
-	int m = 5;
-	
-	for (int d1 = 0 ; d1 < m ; d1++){
-		for (int d2 = d1 + 1 ; d2 < m ; d2++){
-			int cntd1 = 0;
-			int cntd2 = 0;
-			int common = 0;
-			
-			for (int i = 0 ; i < n ; i++){
-				if(a[i][d1]){
-					cntd1++;
-				}
-				if(a[i][d2]){
-					cntd2++;
-				}
-				if(a[i][d1] && a[i][d2]){
-					common++;
-				}
-			}
-			
-			if(cntd1 >= n / 2 && cntd2 >= n / 2 && cntd1 + cntd2 - common == n){
-				cout << "YES" << nline;
-				return;
-			}
+
+	temp = a;
+	int LOG = log2(n) + 1;
+	vector<vector<int>> mat;
+	mat.push_back(a);
+	debug(LOG);
+	map<int , int> mpp;
+	int max_size = 0;
+	while (LOG--) {
+		for (int i = 0 ; i < n ; i++) {
+			mpp[a[i]]++;
 		}
+		for (int i = 0 ; i < n ; i++) {
+			a[i] = mpp[a[i]];
+		}
+		max_size++;
+		mat.push_back(a);
+		mpp.clear();
 	}
-	cout << "NO" << nline;
+	debug(mat);
+	int q ; cin >> q;
+	while (q--) {
+		int x , k ; cin >> x >> k;
+		if(k > max_size){
+			k = max_size;
+		}
+		cout << mat[k][x - 1] << nline;
+	}
 }
 
 
