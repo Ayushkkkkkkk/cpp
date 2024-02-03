@@ -14,6 +14,7 @@ const string RandString = "20257I0MPJMLKOQA";
 	cout.tie(nullptr)
 #define LL long long
 #define LLD long double
+#define i64 int64_t
 #define nline "\n"
 #define pb push_back
 #define ppb pop_back
@@ -269,49 +270,201 @@ void umax(T &a, U b)
 #define EACH(x, a) for (auto &x : a)
 
 
+const int MAX_N = 100005;
+const int LOG = 17;
+int a[MAX_N];
+int m[MAX_N][LOG]; // m[i][j] is minimum among a[i..i+2^j-1]
+int bin_log[MAX_N];
+
+int query(int L, int R) { // O(1)
+	int length = R - L + 1;
+	int k = bin_log[length];
+	return min(m[L][k], m[R - (1 << k) + 1][k]);
+}
+
+void SPARSE() {
+	int n;
+	cin >> n;
+	bin_log[1] = 0;
+	for (int i = 2; i <= n; i++) {
+		bin_log[i] = bin_log[i / 2] + 1;
+	}
+	for (int i = 0; i < n; i++) {
+		cin >> a[i];
+		m[i][0] = a[i];
+	}
+	//  O(N*log(N))
+	for (int k = 1; k < LOG; k++) {
+		for (int i = 0; i + (1 << k) - 1 < n; i++) {
+			m[i][k] = min(m[i][k - 1], m[i + (1 << (k - 1))][k - 1]);
+		}
+	}
+	int q;
+	cin >> q;
+	for (int i = 0; i < q; i++) {
+		int L, R;
+		cin >> L >> R;
+		cout << query(L, R) << "\n";
+	}
+}
+
+void masking()
+{
+	int n;
+	cin >> n;
+	vector<int> masks(n, 0);
+	for (int i = 0; i < n; i++)
+	{
+		int num_workers;
+		cin >> num_workers;
+		int mask = 0;
+		for (int j = 0; j < num_workers; ++j)
+		{
+			int day;
+			cin >> day;
+			mask = (mask | (1 << day));
+		}
+		masks[i] = mask;
+	}
+	int max_days = 0;
+	int person1 = -1;
+	int person2 = -1;
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = i + 1; j < n; ++j)
+		{
+			int interSection = (masks[i] & masks[j]);
+			int common_days = __builtin_popcount(interSection);
+			if (common_days > max_days)
+			{
+				max_days = common_days;
+				person1 = i;
+				person2 = j;
+			}
+			max_days = max(max_days, common_days);
+		}
+	}
+}
+vector<vector<int>> subsets(vector<int> &nums)
+{
+	int n = nums.size();
+	int subsets_ct = (1 << n);
+	vector<vector<int>> outer;
+	for (int mask = 0; mask < subsets_ct; mask++)
+	{
+		vector<int> inner;
+		for (int i = 0; i < n; ++i)
+		{
+			if (mask & (1 << i) != 0)
+			{
+				inner.emplace_back(nums[i]);
+			}
+		}
+		outer.emplace_back(inner);
+	}
+	return outer;
+}
+
+void bitMaskinSubset()
+{
+	int n;
+	cin >> n;
+	vector<int> v(n);
+	for (int i = 0; i < n; i++)
+	{
+		cin >> v[i];
+	}
+}
+
+void XOR() {
+	ll c;
+	cin >> c;
+	ll bit_ct = (ll)log2(c) + 1;
+	ll a = 0 , b = 0;
+	vector<ll> set_bits;
+	for (ll i = 0; i < bit_ct; ++i) {
+		if (c & (1 << i)) {
+			set_bits.push_back(i);
+		}
+		else {
+			a |= (1 << i);
+			b |= (1 << i);
+		}
+	}
+	ll ans = 0;
+	ll sz = 1 << set_bits.size();
+	for (ll mask = 0; mask < sz ; mask++) {
+		ll a_copy = a , b_copy = b;
+		for (ll j = 0; j < set_bits.size(); j++) {
+			if (mask & (mask << j)) {
+				a_copy |= (1 << set_bits[j]);
+			}
+			else {
+				a_copy |= (1 << set_bits[j]);
+			}
+		}
+		ans = max(ans , a_copy * 1LL * b_copy);
+	}
+	cout << ans << nline;
+}
+
 
 void test() {
-	int n ; cin >> n ;
-	vector<int> a(n) , b(n);
-	map<int , int> mpp;
-	FOR(n){
-		cin >> a[i];;
+	i64 a , b , k; cin >> a >> b >> k;
+	i64 mx_pos = 0;;
+	for (i64 i = 0 ; i < 64 ; i++) {
+		if ((k >> 1) & 1)
+			mx_pos = i;
 	}
-	FOR(n){
-		cin >> b[i];
-	}
-	
-	for (int i = 0 ; i < n ; i++){
-		mpp[a[i]] = b[i];
-	}
-	if(is_sorted(all(a)) || is_sorted(all(b))){
-		for (int i = 0 ; i < n ; i++){
-			cout << a[i] << " ";
+
+	for (i64 i = 63 ; i >= 0 ; i--) {
+		i64 a_bit = ((a >> i) & 1);
+		i64 b_bit = ((b >> i) & 1);
+
+		if (a_bit != b_bit) {
+			if (a_bit == 1) {
+
+			}
+			else {
+				swap(a , b);
+			}
+			break;
 		}
-		cout << nline;
-		FOR(n){
-			cout << b[i] << " ";
+	}
+
+	function<int(int , int , int)> find = [&](int a , int b , int k)->int{
+		bool flag = false;
+		i64 x = 0;
+		for (i64 i = 63 ; i >= 0 ; i--) {
+			i64 a_bit = ((a >> i) & 1);
+			i64 b_bit = ((b >> i) & 1);
+			
+			if(a_bit == 1 && b_bit == 0){
+				if(!flag){
+					flag = true;
+				}
+				else{
+					i64 nx = x + (1ll << i);
+					if(nx <= k){
+						x += (1ll << i);
+					}
+					else{
+						x += 0;
+					}
+				}
+			}
+			else{
+				
+			}
 		}
-		cout << nline;
-		return;
-	}
+		
+		a ^= x;
+		b ^= x;
+		return abs(a - b);
+	};
 	
-	sort(all(a));
 	
-	vector<int> temp = a;
-	for (int i = 0 ; i < n ; i++){
-		b[i] = mpp[a[i]];
-	}
-	
-	for (int i = 0 ; i < n ; i++){
-		cout << a[i] << " ";
-	}
-	cout << nline;
-	FOR(n){
-		cout << b[i] << " ";
-	}
-	cout << nline;
-	
+	cout << find(a , b , k) << nline;
 }
 
 
