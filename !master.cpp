@@ -271,66 +271,47 @@ void umax(T &a, U b)
 
 
 void test() {
-	int n , a , b ; cin >> n >> a >> b;
-	if(a + b > n - 2){
-		cout << -1 << nline;
-		return;
+	int n ; cin >> n ;
+	vector<int> a(n) , b(n);
+	map<int , int> mpp;
+	FOR(n){
+		cin >> a[i];;
 	}
-	else if(abs(a - b) > 1){
-		cout << -1 << nline;
-		return;
+	FOR(n){
+		cin >> b[i];
 	}
-	else if(a == 0 && b == 0){
-			for (int i = 0 ; i < n ; i++){
-				cout << i + 1 << " ";
-			}
-			cout << nline;
-		
+	
+	for (int i = 0 ; i < n ; i++){
+		mpp[a[i]] = b[i];
 	}
-	else if(a == 1 && b == 0){
-		for (int i = 1 ; i <= n - 2; i++){
-			cout << i << " ";
-		}
-		cout << n << " " << n - 1 << nline;
-	}
-	else if(a == 0 && b == 1){
-		cout << "2 1" << " ";
-		for (int i = 3 ; i <= n ; i++){
-			cout << i << " ";
+	if(is_sorted(all(a)) || is_sorted(all(b))){
+		for (int i = 0 ; i < n ; i++){
+			cout << a[i] << " ";
 		}
 		cout << nline;
+		FOR(n){
+			cout << b[i] << " ";
+		}
+		cout << nline;
+		return;
 	}
-	else{
-		ll x ; 
-		if(a > b){
-			x = a + b + 1;
-			for (int i = 1 ; i <= n - x; i++)
-				cout << i << " ";
-			for (int i = n - x + 1; i <= n ; i+=2)
-				cout << i + 1 << " " << i << " ";
-			cout << nline;
-		}
-		else if(b > a){
-			x = a + b + 1;
-			debug(x);
-			for (int i = 1 ; i <= x ; i+=2)
-				cout << i + 1 << " " << i << " ";
-			for (int i = x + 1; i <= n ; i++)
-				cout << i << " ";
-			cout << nline;
-		}
-		else{
-			x = a + b;
-			for (int i = 1 ; i <= x ; i+=2){
-				cout << i + 1 << " " << i << " ";
-			}
-			for (int i = x + 1 ; i <= n - 2; i++){
-				cout << i << " ";
-			}
-			cout << n << " " << n - 1 << " ";
-			cout << nline;
-		}
+	
+	sort(all(a));
+	
+	vector<int> temp = a;
+	for (int i = 0 ; i < n ; i++){
+		b[i] = mpp[a[i]];
 	}
+	
+	for (int i = 0 ; i < n ; i++){
+		cout << a[i] << " ";
+	}
+	cout << nline;
+	FOR(n){
+		cout << b[i] << " ";
+	}
+	cout << nline;
+	
 }
 
 
