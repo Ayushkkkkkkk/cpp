@@ -270,9 +270,31 @@ void umax(T &a, U b)
 #define EACH(x, a) for (auto &x : a)
 
 
-
+vector<pair<int , int>> dp(200000 + 1);
 void test() {
-	
+	int n; cin >> n;
+	int k; cin >> k;
+
+	int ct = 0;
+
+
+
+	if (k >= 7 && k >= n) {
+		cout << 0 << endl;
+		return;
+	}
+
+
+	int x = dp[k - 1].first, y = dp[k - 1].second;
+	debug(x);
+	debug(y);
+	for (int i = 0; i <= n; i++) {
+		int z = n - x * i;
+		if (z % y == 0 && z / y >= 0 && z / y >= i) {
+			ct++;
+		}
+	}
+	cout << ct << endl;
 }
 
 
@@ -280,6 +302,15 @@ int32_t main() {
 	lnx();
 	int t;
 	cin >> t;
+
+	dp[0] = {1, 1};
+	dp[1] = {0, 1};
+	dp[2] = {1, 1};
+	for (int i = 3; i <= 200000; i++) {
+		dp[i].first = dp[i - 1].second;
+		dp[i].second = dp[i - 1].second + dp[i - 1].first;
+	}
+
 	W(t)
 	{
 		test();
