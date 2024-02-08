@@ -273,35 +273,31 @@ void umax(T &a, U b)
 
 void test() {
 	int n ; cin >> n;
-	int N = (n * (n - 1)) / 2;
-	vector<int> v(N);
-	
-	cin >> v;
-	sort(all(v));
-	
-	
-	vector<int> ans;
-	int ind = 0;
-	int add = n - 1;
-	
-	while(add > 0){
-		ans.push_back(v[ind]);
-		ind =ind + add;
-		add--;
+	vector<int> a(n);
+	cin >> a;
+	int ans = 0;
+	set<int> st;
+	int i = 0 , j = 0;
+	while(i < n && j < n){
+		while(j < n && !st.count(a[j])){
+			st.insert(a[j]);
+			ans = max(ans , j - i + 1);
+			j++;
+		}
+		while(j < n && st.count(a[j])){
+			st.erase(a[i]);
+			i++;
+		}
 	}
 	
-	ans.push_back(1e9);
-	for (auto i : ans){
-		cout << i << " ";
-	}
-	cout << nline;
+	cout << ans << nline;
 }
 
 
 int32_t main() {
 	lnx();
 	int t;
-	cin >> t;
+	t = 1;
 
 	W(t)
 	{
