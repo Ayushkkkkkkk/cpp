@@ -272,43 +272,29 @@ void umax(T &a, U b)
 
 
 void test() {
-	string s ; cin >> s;
-	int n = sz(s);
-	int ind = n - 1;
-
-	int pos = n;
-	while (ind > -1) {
-		if (s[ind] - '0' >= 5) {
-			int next = ind - 1;
-
-
-			while (next > -1 && s[next] == 9) {
-				next--;
-			}
-			
-			if(next == -1){
-				pos = 1;
-				s = '1' + s;
-				break;
-			}
-			else{
-				ind = next;
-				pos = next + 1;
-				int c = s[ind] - '0';
-				++c;
-				s[ind] = char(c + '0');
-			}
-		}
-		else{
-			--ind;
-		}
+	int n ; cin >> n;
+	int N = (n * (n - 1)) / 2;
+	vector<int> v(N);
+	
+	cin >> v;
+	sort(all(v));
+	
+	
+	vector<int> ans;
+	int ind = 0;
+	int add = n - 1;
+	
+	while(add > 0){
+		ans.push_back(v[ind]);
+		ind =ind + add;
+		add--;
 	}
 	
-	for (int i = pos ; i < sz(s) ; i++){
-		s[i] = '0';
+	ans.push_back(1e9);
+	for (auto i : ans){
+		cout << i << " ";
 	}
-	
-	cout << s << nline;
+	cout << nline;
 }
 
 
