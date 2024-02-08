@@ -272,73 +272,43 @@ void umax(T &a, U b)
 
 
 void test() {
-	int n; cin >> n;
-	vector<int> a(n);
-	vector<pair<int , int>> vec;
-	for (int i = 0 ; i < n ; i++){
-		cin >> a[i];
-	}
-	if(is_sorted(a.begin() , a.end())){
-		cout << 0 << nline;
-		return;
-	}
-	
-	bool found_pos = false;
-	for (int i = 0 ; i < n ; i++){
-		if(a[i] > 0){
-			found_pos = true;
-			break;
-		}
-	}
-	
-	if(!found_pos){
-		for (int i = n - 1 ; i >= 0 ; i--){
-			a[i - 1] = a[i - 1] + a[i];
-			vec.push_back({i - 1 + 1 , i + 1});
-		}
-		cout << vec.size() << nline;
-		for (int i = 0 ; i < vec.size() ; i++){
-			cout << vec[i].first << " " << vec[i].second << nline;
-		}
-		return;
-	}
-	
-	int maxi = INT_MIN;
-	int idx = 0;
-	for (int i = 0 ; i < n ; i++){
-		if(a[i] > maxi){
-			maxi = max(maxi , a[i]);
-			idx = i;
-		}
-	}
-	
-	while(a[idx] < 20){
-		a[idx] += a[idx];
-		vec.push_back({idx + 1 , idx + 1});
-	}
-	
-	bool first = true;
-	for (int i = 1 ; i < n ; i++){
-		if(first){
-			a[i] += 2 * a[idx];
-			vec.push_back({i + 1 , idx + 1});
-			vec.push_back({i + 1 , idx + 1});
-			first = false;
+	string s ; cin >> s;
+	int n = sz(s);
+	int ind = n - 1;
+
+	int pos = n;
+	while (ind > -1) {
+		if (s[ind] - '0' >= 5) {
+			int next = ind - 1;
+
+
+			while (next > -1 && s[next] == 9) {
+				next--;
+			}
+			
+			if(next == -1){
+				pos = 1;
+				s = '1' + s;
+				break;
+			}
+			else{
+				ind = next;
+				pos = next + 1;
+				int c = s[ind] - '0';
+				++c;
+				s[ind] = char(c + '0');
+			}
 		}
 		else{
-			a[i] += 2*a[i - 1];
-			vec.push_back({i + 1 , i});
-			vec.push_back({i + 1 , i});
+			--ind;
 		}
 	}
 	
-	debug(a);
-	debug(vec);
-	
-	cout << vec.size() << nline;
-	for (pair<int , int> it : vec){
-		cout << it.first << " " << it.second << nline;
+	for (int i = pos ; i < sz(s) ; i++){
+		s[i] = '0';
 	}
+	
+	cout << s << nline;
 }
 
 
