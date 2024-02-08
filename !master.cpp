@@ -270,31 +270,75 @@ void umax(T &a, U b)
 #define EACH(x, a) for (auto &x : a)
 
 
-vector<pair<int , int>> dp(200000 + 1);
+
 void test() {
 	int n; cin >> n;
-	int k; cin >> k;
-
-	int ct = 0;
-
-
-
-	if (k >= 7 && k >= n) {
-		cout << 0 << endl;
+	vector<int> a(n);
+	vector<pair<int , int>> vec;
+	for (int i = 0 ; i < n ; i++){
+		cin >> a[i];
+	}
+	if(is_sorted(a.begin() , a.end())){
+		cout << 0 << nline;
 		return;
 	}
-
-
-	int x = dp[k - 1].first, y = dp[k - 1].second;
-	debug(x);
-	debug(y);
-	for (int i = 0; i <= n; i++) {
-		int z = n - x * i;
-		if (z % y == 0 && z / y >= 0 && z / y >= i) {
-			ct++;
+	
+	bool found_pos = false;
+	for (int i = 0 ; i < n ; i++){
+		if(a[i] > 0){
+			found_pos = true;
+			break;
 		}
 	}
-	cout << ct << endl;
+	
+	if(!found_pos){
+		for (int i = n - 1 ; i >= 0 ; i--){
+			a[i - 1] = a[i - 1] + a[i];
+			vec.push_back({i - 1 + 1 , i + 1});
+		}
+		cout << vec.size() << nline;
+		for (int i = 0 ; i < vec.size() ; i++){
+			cout << vec[i].first << " " << vec[i].second << nline;
+		}
+		return;
+	}
+	
+	int maxi = INT_MIN;
+	int idx = 0;
+	for (int i = 0 ; i < n ; i++){
+		if(a[i] > maxi){
+			maxi = max(maxi , a[i]);
+			idx = i;
+		}
+	}
+	
+	while(a[idx] < 20){
+		a[idx] += a[idx];
+		vec.push_back({idx + 1 , idx + 1});
+	}
+	
+	bool first = true;
+	for (int i = 1 ; i < n ; i++){
+		if(first){
+			a[i] += 2 * a[idx];
+			vec.push_back({i + 1 , idx + 1});
+			vec.push_back({i + 1 , idx + 1});
+			first = false;
+		}
+		else{
+			a[i] += 2*a[i - 1];
+			vec.push_back({i + 1 , i});
+			vec.push_back({i + 1 , i});
+		}
+	}
+	
+	debug(a);
+	debug(vec);
+	
+	cout << vec.size() << nline;
+	for (pair<int , int> it : vec){
+		cout << it.first << " " << it.second << nline;
+	}
 }
 
 
@@ -302,14 +346,6 @@ int32_t main() {
 	lnx();
 	int t;
 	cin >> t;
-
-	dp[0] = {1, 1};
-	dp[1] = {0, 1};
-	dp[2] = {1, 1};
-	for (int i = 3; i <= 200000; i++) {
-		dp[i].first = dp[i - 1].second;
-		dp[i].second = dp[i - 1].second + dp[i - 1].first;
-	}
 
 	W(t)
 	{
