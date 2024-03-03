@@ -1,3 +1,4 @@
+
 #include <algorithm>
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
@@ -10,9 +11,9 @@ using namespace chrono;
 const string RandString = "20257I0MPJMLKOQA";
 
 #define fastio()                      \
-	ios_base::sync_with_stdio(false); \
-	cin.tie(nullptr);                 \
-	cout.tie(nullptr)
+  ios_base::sync_with_stdio(false); \
+  cin.tie(nullptr);                 \
+  cout.tie(nullptr)
 #define LL long long
 #define LLD long double
 #define i64 int64_t
@@ -29,10 +30,10 @@ const string RandString = "20257I0MPJMLKOQA";
 #define lower(s1) transform(s1.begin(), s1.end(), s1.begin(), ::tolower);
 #define upper(s1) transform(s1.begin(), s1.end(), s1.begin(), ::toupper);
 #define getunique(v)                      \
-	{                                     \
-		sort(all(v));                     \
-		v.erase(unique(all(v)), v.end()); \
-	}
+  {                                     \
+    sort(all(v));                     \
+    v.erase(unique(all(v)), v.end()); \
+  }
 #define vt vector
 #define decimal cout << fixed << setprecision(15);
 #define W(t) while (t--)
@@ -40,9 +41,9 @@ const string RandString = "20257I0MPJMLKOQA";
 void lnx()
 {
 #ifndef ONLINE_JUDGE
-	freopen("error.txt", "w", stderr);
+  freopen("error.txt", "w", stderr);
 #endif
-	fastio();
+  fastio();
 }
 
 typedef long long ll;
@@ -51,21 +52,21 @@ typedef long double lld;
 
 ll FIRSTTRUE(function<bool(ll)> f, ll lb, ll rb)
 {
-	while (lb < rb)
-	{
-		ll mb = (lb + rb) / 2;
-		f(mb) ? rb = mb : lb = mb + 1;
-	}
-	return lb;
+  while (lb < rb)
+  {
+    ll mb = (lb + rb) / 2;
+    f(mb) ? rb = mb : lb = mb + 1;
+  }
+  return lb;
 }
 ll LASTTRUE(function<bool(ll)> f, ll lb, ll rb)
 {
-	while (lb < rb)
-	{
-		ll mb = (lb + rb + 1) / 2;
-		f(mb) ? lb = mb : rb = mb - 1;
-	}
-	return lb;
+  while (lb < rb)
+  {
+    ll mb = (lb + rb + 1) / 2;
+    f(mb) ? lb = mb : rb = mb - 1;
+  }
+  return lb;
 }
 
 // typedef tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update> pbds;
@@ -97,132 +98,132 @@ void _print(multiset<T> v);
 template <class T, class V>
 void _print(pair<T, V> p)
 {
-	cerr << "{";
-	_print(p.ff);
-	cerr << ",";
-	_print(p.ss);
-	cerr << "}";
+  cerr << "{";
+  _print(p.ff);
+  cerr << ",";
+  _print(p.ss);
+  cerr << "}";
 }
 template <class T>
 void _print(vector<T> v)
 {
-	cerr << "[ ";
-	for (T i : v)
-	{
-		cerr<< i ;
-		cerr << " ";
-	}
-		cerr << "]";
+  cerr << "[ ";
+  for (T i : v)
+  {
+    cerr<< i ;
+    cerr << " ";
+  }
+    cerr << "]";
 }
 template <class T>
 void _print(set<T> v)
 {
-	cerr << "[ ";
-	for (T i : v)
-	{
-		_print(i);
-		cerr << " ";
-	}
-	cerr << "]";
+  cerr << "[ ";
+  for (T i : v)
+  {
+    _print(i);
+    cerr << " ";
+  }
+  cerr << "]";
 }
 template <class T>
 void _print(multiset<T> v)
 {
-	cerr << "[ ";
-	for (T i : v)
-	{
-		_print(i);
-		cerr << " ";
-	}
-	cerr << "]";
+  cerr << "[ ";
+  for (T i : v)
+  {
+    _print(i);
+    cerr << " ";
+  }
+  cerr << "]";
 }
 template <class T, class V>
 void _print(map<T, V> v)
 {
-	cerr << "[ ";
-	for (auto i : v)
-	{
-		_print(i);
-		cerr << " ";
-	}
-	cerr << "]";
+  cerr << "[ ";
+  for (auto i : v)
+  {
+    _print(i);
+    cerr << " ";
+  }
+  cerr << "]";
 }
 template <class T, class V>
 void _print(unordered_map<T, V> v)
 {
-	cerr << "[ ";
-	for (auto i : v)
-	{
-		_print(i);
-		cerr << " ";
-	}
-	cerr << "]";
+  cerr << "[ ";
+  for (auto i : v)
+  {
+    _print(i);
+    cerr << " ";
+  }
+  cerr << "]";
 }
 template <class T>
 void _print(unordered_set<T> v)
 {
-	cerr << "[ ";
-	for (T i : v)
-	{
-		_print(i);
-		cerr << " ";
-	}
-	cerr << "]";
+  cerr << "[ ";
+  for (T i : v)
+  {
+    _print(i);
+    cerr << " ";
+  }
+  cerr << "]";
 }
 
 template <typename T>
 vector<T> &operator--(vector<T> &v)
 {
-	for (auto &i : v)
-		--i;
-	return v;
+  for (auto &i : v)
+    --i;
+  return v;
 }
 template <typename T>
 vector<T> &operator++(vector<T> &v)
 {
-	for (auto &i : v)
-		++i;
-	return v;
+  for (auto &i : v)
+    ++i;
+  return v;
 }
 template <typename T>
 istream &operator>>(istream &is, vector<T> &v)
 {
-	for (auto &i : v)
-		is >> i;
-	return is;
+  for (auto &i : v)
+    is >> i;
+  return is;
 }
 template <typename T>
 ostream &operator<<(ostream &os, vector<T> v)
 {
-	for (auto &i : v)
-		os << i << ' ';
-	return os;
+  for (auto &i : v)
+    os << i << ' ';
+  return os;
 }
 template <typename T, typename U>
 pair<T, U> &operator--(pair<T, U> &p)
 {
-	--p.first;
-	--p.second;
-	return p;
+  --p.first;
+  --p.second;
+  return p;
 }
 template <typename T, typename U>
 pair<T, U> &operator++(pair<T, U> &p)
 {
-	++p.first;
-	++p.second;
-	return p;
+  ++p.first;
+  ++p.second;
+  return p;
 }
 template <typename T, typename U>
 istream &operator>>(istream &is, pair<T, U> &p)
 {
-	is >> p.first >> p.second;
-	return is;
+  is >> p.first >> p.second;
+  return is;
 }
 template <typename T, typename U>
 ostream &operator<<(ostream &os, pair<T, U> p)
 {
-	os << p.first << ' ' << p.second;
-	return os;
+  os << p.first << ' ' << p.second;
+  return os;
 }
 template <typename T, typename U>
 pair<T, U> operator-(pair<T, U> a, pair<T, U> b) { return mp(a.first - b.first, a.second - b.second); }
@@ -231,21 +232,21 @@ pair<T, U> operator+(pair<T, U> a, pair<T, U> b) { return mp(a.first + b.first, 
 template <typename T, typename U>
 void umin(T &a, U b)
 {
-	if (a > b)
-		a = b;
+  if (a > b)
+    a = b;
 }
 template <typename T, typename U>
 void umax(T &a, U b)
 {
-	if (a < b)
-		a = b;
+  if (a < b)
+    a = b;
 }
 
 #ifndef ONLINE_JUDGE
 #define debug(x)       \
-	cerr << #x << " "; \
-	_print(x);         \
-	cerr << endl;
+  cerr << #x << " "; \
+  _print(x);         \
+  cerr << endl;
 #else
 #define debug(x)
 #endif
@@ -300,7 +301,7 @@ class SparseTable {
 };
 
 void test(){
-	int n, k;
+  int n, k;
     cin >> n >> k;
     vector<int> a(n);
     vector<bool> have(k);
@@ -356,13 +357,12 @@ void test(){
 
 
 int32_t main() {
-	lnx();
-	int t;
+  lnx();
+  int t;
     cin >> t;
     W(t){
 
-		test();
-	}
+    test();
+  }
 }
-
 
