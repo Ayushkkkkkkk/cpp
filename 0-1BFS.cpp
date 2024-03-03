@@ -40,7 +40,7 @@ int bfs(){
 
 
 void solve(){
-	cin >> n >> m ;
+	cin >> n >> m;
 	for (int i = 0 ; i < m ; i++){
 		int x , y; cin >> x >> y;
 		

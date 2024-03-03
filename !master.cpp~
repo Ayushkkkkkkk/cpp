@@ -8,9 +8,13 @@ using namespace chrono;
 
 const string RandString = "20257I0MPJMLKOQA";
 
-#define fastio() 		ios_base::sync_with_stdio(false);cin.tie(nullptr);cout.tie(nullptr)
+#define fastio()                      \
+	ios_base::sync_with_stdio(false); \
+	cin.tie(nullptr);                 \
+	cout.tie(nullptr)
 #define LL long long
 #define LLD long double
+#define i64 int64_t
 #define nline "\n"
 #define pb push_back
 #define ppb pop_back
@@ -23,8 +27,6 @@ const string RandString = "20257I0MPJMLKOQA";
 #define set_bits __builtin_popcountll
 #define lower(s1) transform(s1.begin(), s1.end(), s1.begin(), ::tolower);
 #define upper(s1) transform(s1.begin(), s1.end(), s1.begin(), ::toupper);
-#define ook order_of_key    // count of elements strictly smaller than k
-#define fbo find_by_order   // iterator to kth element starting from 0
 #define getunique(v)                      \
 	{                                     \
 		sort(all(v));                     \
@@ -247,7 +249,7 @@ void umax(T &a, U b)
 #define debug(x)
 #endif
 
-//#define int long long
+#define int long long
 
 #define sum(a) (accumulate((a).begin(), (a).end(), 0ll))
 #define mine(a) (*min_element((a).begin(), (a).end()))
@@ -270,16 +272,22 @@ void umax(T &a, U b)
 
 
 void test() {
-	
+	int a , b ; cin >> a >> b;
+	if(b % 2 == 0){
+		cout << "YES" << nline;
+		return;
+	}	
+	else{
+		cout << "NO" << nline;
+	}
 }
 
 
-
-int32_t main()
-{
+int32_t main() {
 	lnx();
 	int t;
 	cin >> t;
+
 	W(t)
 	{
 		test();

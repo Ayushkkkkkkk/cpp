@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
+#include <string>
 
 using namespace std;
 using namespace __gnu_pbds;
@@ -8,9 +9,13 @@ using namespace chrono;
 
 const string RandString = "20257I0MPJMLKOQA";
 
-#define fastio() 		ios_base::sync_with_stdio(false);cin.tie(nullptr);cout.tie(nullptr)
+#define fastio()                      \
+	ios_base::sync_with_stdio(false); \
+	cin.tie(nullptr);                 \
+	cout.tie(nullptr)
 #define LL long long
 #define LLD long double
+#define i64 int64_t
 #define nline "\n"
 #define pb push_back
 #define ppb pop_back
@@ -23,8 +28,6 @@ const string RandString = "20257I0MPJMLKOQA";
 #define set_bits __builtin_popcountll
 #define lower(s1) transform(s1.begin(), s1.end(), s1.begin(), ::tolower);
 #define upper(s1) transform(s1.begin(), s1.end(), s1.begin(), ::toupper);
-#define ook order_of_key    // count of elements strictly smaller than k
-#define fbo find_by_order   // iterator to kth element starting from 0
 #define getunique(v)                      \
 	{                                     \
 		sort(all(v));                     \
@@ -34,13 +37,6 @@ const string RandString = "20257I0MPJMLKOQA";
 #define decimal cout << fixed << setprecision(15);
 #define W(t) while (t--)
 
-void lnx()
-{
-#ifndef ONLINE_JUDGE
-	freopen("error.txt", "w", stderr);
-#endif
-	fastio();
-}
 
 typedef long long ll;
 typedef unsigned long long ull;
@@ -106,10 +102,10 @@ void _print(vector<T> v)
 	cerr << "[ ";
 	for (T i : v)
 	{
-		_print(i);
+		cerr<< i ;
 		cerr << " ";
 	}
-	cerr << "]";
+		cerr << "]";
 }
 template <class T>
 void _print(set<T> v)
@@ -247,7 +243,7 @@ void umax(T &a, U b)
 #define debug(x)
 #endif
 
-//#define int long long
+#define int long long
 
 #define sum(a) (accumulate((a).begin(), (a).end(), 0ll))
 #define mine(a) (*min_element((a).begin(), (a).end()))
@@ -267,21 +263,91 @@ void umax(T &a, U b)
 #define FOR(...) F_ORC(__VA_ARGS__)(__VA_ARGS__)
 #define EACH(x, a) for (auto &x : a)
 
+void lnx(){
+#ifndef ONLINE_JUDGE
+	freopen("error.txt", "w", stderr);
+#endif
+	fastio();
+}
 
 
-void test() {
-	
+bool isPrime(int n)
+{
+    // Corner case
+    if (n <= 1)
+        return false;
+ 
+    // Check from 2 to square root of n
+    for (int i = 2; i <= sqrt(n); i++)
+        if (n % i == 0)
+            return false;
+ 
+    return true;
+}
+
+
+void test(){
+    int l , r;  cin >> l >> r;
+    if(l % 2 == 0 && l != 2){
+        cout << l / 2 << " " << l / 2  << nline;
+        return;
+    }
+    else if(r % 2 == 0 && r != 2){
+        cout << r / 2 << " " << r / 2 << nline;
+        return;
+     }
+
+    int diff = r - l;
+    bool found = false;
+    if(diff == 0){
+        int num = l;
+        if(isPrime(num)){
+            cout << -1 << nline;
+            return;
+        }
+        for (int i = l / 2 ; i <= r ; i++){
+            int dx = num - i;
+            if(__gcd(dx , i) > 1 && dx != 0){
+                cout << dx << " " << i << nline;
+                found = true;
+                break;
+            }
+        }
+    }
+    else{
+        for (int i = l ; i <= r ; i++){
+            if(i % 2 == 0 && i != 2){
+                cout << i / 2 << " " << i / 2 << nline;
+                found = true;
+                break;
+            }
+        }
+    }
+
+    if(!found){
+        cout << -1 << nline;
+        return;
+    }
+
 }
 
 
 
-int32_t main()
-{
+
+
+
+
+
+
+
+int32_t main() {
 	lnx();
 	int t;
-	cin >> t;
-	W(t)
-	{
+    cin >> t;
+    W(t){
+
 		test();
 	}
 }
+
+ 

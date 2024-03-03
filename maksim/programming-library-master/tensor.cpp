@@ -115,6 +115,7 @@ ostream &operator << (ostream &o, const Tensor<T, 2, M> &t) {
     if (widths.empty()) return o;
 
     const int padding = 12;
+    
 
     widths.assign(widths.size(), *max_element(widths.begin(), widths.end()));
 

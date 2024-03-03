@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
@@ -108,10 +109,10 @@ void _print(vector<T> v)
 	cerr << "[ ";
 	for (T i : v)
 	{
-		_print(i);
+		cerr<< i ;
 		cerr << " ";
 	}
-	cerr << "]";
+		cerr << "]";
 }
 template <class T>
 void _print(set<T> v)
@@ -270,37 +271,27 @@ void umax(T &a, U b)
 #define EACH(x, a) for (auto &x : a)
 
 
+void test(){
+	     
+} 
 
-void test() {
-	int n ; cin >> n;
-	vector<int> a(n);
-	cin >> a;
-	int ans = 0;
-	set<int> st;
-	int i = 0 , j = 0;
-	while(i < n && j < n){
-		while(j < n && !st.count(a[j])){
-			st.insert(a[j]);
-			ans = max(ans , j - i + 1);
-			j++;
-		}
-		while(j < n && st.count(a[j])){
-			st.erase(a[i]);
-			i++;
-		}
-	}
-	
-	cout << ans << nline;
-}
+
+
+
+
+
+
+
 
 
 int32_t main() {
 	lnx();
 	int t;
-	t = 1;
+    cin >> t;
+    W(t){
 
-	W(t)
-	{
 		test();
 	}
 }
+
+

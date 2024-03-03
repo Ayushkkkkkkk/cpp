@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
+#include <string>
 
 using namespace std;
 using namespace __gnu_pbds;
@@ -8,9 +9,13 @@ using namespace chrono;
 
 const string RandString = "20257I0MPJMLKOQA";
 
-#define fastio() 		ios_base::sync_with_stdio(false);cin.tie(nullptr);cout.tie(nullptr)
+#define fastio()                      \
+	ios_base::sync_with_stdio(false); \
+	cin.tie(nullptr);                 \
+	cout.tie(nullptr)
 #define LL long long
 #define LLD long double
+#define i64 int64_t
 #define nline "\n"
 #define pb push_back
 #define ppb pop_back
@@ -23,8 +28,6 @@ const string RandString = "20257I0MPJMLKOQA";
 #define set_bits __builtin_popcountll
 #define lower(s1) transform(s1.begin(), s1.end(), s1.begin(), ::tolower);
 #define upper(s1) transform(s1.begin(), s1.end(), s1.begin(), ::toupper);
-#define ook order_of_key    // count of elements strictly smaller than k
-#define fbo find_by_order   // iterator to kth element starting from 0
 #define getunique(v)                      \
 	{                                     \
 		sort(all(v));                     \
@@ -34,13 +37,6 @@ const string RandString = "20257I0MPJMLKOQA";
 #define decimal cout << fixed << setprecision(15);
 #define W(t) while (t--)
 
-void lnx()
-{
-#ifndef ONLINE_JUDGE
-	freopen("error.txt", "w", stderr);
-#endif
-	fastio();
-}
 
 typedef long long ll;
 typedef unsigned long long ull;
@@ -106,10 +102,10 @@ void _print(vector<T> v)
 	cerr << "[ ";
 	for (T i : v)
 	{
-		_print(i);
+		cerr<< i ;
 		cerr << " ";
 	}
-	cerr << "]";
+		cerr << "]";
 }
 template <class T>
 void _print(set<T> v)
@@ -247,7 +243,7 @@ void umax(T &a, U b)
 #define debug(x)
 #endif
 
-//#define int long long
+#define int long long
 
 #define sum(a) (accumulate((a).begin(), (a).end(), 0ll))
 #define mine(a) (*min_element((a).begin(), (a).end()))
@@ -267,21 +263,59 @@ void umax(T &a, U b)
 #define FOR(...) F_ORC(__VA_ARGS__)(__VA_ARGS__)
 #define EACH(x, a) for (auto &x : a)
 
+void lnx(){
+#ifndef ONLINE_JUDGE
+	freopen("error.txt", "w", stderr);
+#endif
+	fastio();
+}
+
+int lcm(int a , int b){
+    return a * b / __gcd(a , b);
+}
 
 
-void test() {
-	
+void test(){
+   int n , x , y ;
+   cin >> n >> x >> y;
+
+
+   int dx = lcm(x , y);
+   int intersect = n / dx;
+   int sigma = n * (n + 1) / 2;
+   int can_keep_max = n / x;
+   int sigma_diff =  can_keep_max * (can_keep_max + 1) / 2;
+   int total_sum_max = sigma - sigma_diff;
+
+   int can_keep_min = n / y;
+   int total_keep_min_after_insersect = can_keep_min - intersect;
+
+
+   int final_can_keep = can_keep_max - intersect;
+    int final_sum = sigma - ((n - final_can_keep) * (n - final_can_keep + 1) / 2);
+    //cout << final_sum << nline;
+
+    final_sum -= (total_keep_min_after_insersect * (total_keep_min_after_insersect + 1)) / 2;
+    cout << final_sum << nline;
 }
 
 
 
-int32_t main()
-{
+
+
+
+
+
+
+
+int32_t main() {
 	lnx();
 	int t;
-	cin >> t;
-	W(t)
-	{
+    cin >> t;
+    W(t){
+
 		test();
 	}
 }
+
+ 
