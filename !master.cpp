@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
@@ -37,13 +36,44 @@ const string RandString = "20257I0MPJMLKOQA";
 #define decimal cout << fixed << setprecision(15);
 #define W(t) while (t--)
 
-void lnx()
-{
-#ifndef ONLINE_JUDGE
-	freopen("error.txt", "w", stderr);
+
+#define DEBUG
+
+void __print(int x) {cerr << x;}
+void __print(long x) {cerr << x;}
+void __print(long long x) {cerr << x;}
+void __print(unsigned x) {cerr << x;}
+void __print(unsigned long x) {cerr << x;}
+void __print(unsigned long long x) {cerr << x;}
+void __print(float x) {cerr << x;}
+void __print(double x) {cerr << x;}
+void __print(long double x) {cerr << x;}
+void __print(char x) {cerr << '\'' << x << '\'';}
+void __print(const char *x) {cerr << '\"' << x << '\"';}
+void __print(const string &x) {cerr << '\"' << x << '\"';}
+void __print(bool x) {cerr << (x ? "true" : "false");}
+ 
+template<typename T, typename V>
+void __print(const pair<T, V> &x);
+template<typename T>
+void __print(const T &x) {int f = 0; cerr << '{'; for (auto &i: x) cerr << (f++ ? ", " : ""), __print(i); cerr << "}";}
+template<typename T, typename V>
+void __print(const pair<T, V> &x) {cerr << '{'; __print(x.first); cerr << ", "; __print(x.second); cerr << '}';}
+void _print() {cerr << "]\n";}
+template <typename T, typename... V>
+void _print(T t, V... v) {__print(t); if (sizeof...(v)) cerr << ", "; _print(v...);}
+
+#ifdef DEBUG
+#define debug(x...) cerr << "\e[91m"<<__func__<<":"<<__LINE__<<" [" << #x << "] = ["; _print(x); cerr << "\e[39m" << endl;
+#else
+#define debug(x...)
 #endif
-	fastio();
-}
+
+
+
+
+
+
 
 typedef long long ll;
 typedef unsigned long long ull;
@@ -72,103 +102,7 @@ ll LASTTRUE(function<bool(ll)> f, ll lb, ll rb)
 template <typename T = int>
 using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
 
-void _print(ll t) { cerr << t; }
-void _print(int t) { cerr << t; }
-void _print(string t) { cerr << t; }
-void _print(char t) { cerr << t; }
-void _print(lld t) { cerr << t; }
-void _print(double t) { cerr << t; }
-void _print(ull t) { cerr << t; }
 
-template <class T, class V>
-void _print(pair<T, V> p);
-template <class T>
-void _print(vector<T> v);
-template <class T>
-void _print(set<T> v);
-template <class T>
-void _print(unordered_set<T> v);
-template <class T, class V>
-void _print(map<T, V> v);
-template <class T, class V>
-void _print(unordered_map<T, V> v);
-template <class T>
-void _print(multiset<T> v);
-template <class T, class V>
-void _print(pair<T, V> p)
-{
-	cerr << "{";
-	_print(p.ff);
-	cerr << ",";
-	_print(p.ss);
-	cerr << "}";
-}
-template <class T>
-void _print(vector<T> v)
-{
-	cerr << "[ ";
-	for (T i : v)
-	{
-		cerr<< i ;
-		cerr << " ";
-	}
-		cerr << "]";
-}
-template <class T>
-void _print(set<T> v)
-{
-	cerr << "[ ";
-	for (T i : v)
-	{
-		_print(i);
-		cerr << " ";
-	}
-	cerr << "]";
-}
-template <class T>
-void _print(multiset<T> v)
-{
-	cerr << "[ ";
-	for (T i : v)
-	{
-		_print(i);
-		cerr << " ";
-	}
-	cerr << "]";
-}
-template <class T, class V>
-void _print(map<T, V> v)
-{
-	cerr << "[ ";
-	for (auto i : v)
-	{
-		_print(i);
-		cerr << " ";
-	}
-	cerr << "]";
-}
-template <class T, class V>
-void _print(unordered_map<T, V> v)
-{
-	cerr << "[ ";
-	for (auto i : v)
-	{
-		_print(i);
-		cerr << " ";
-	}
-	cerr << "]";
-}
-template <class T>
-void _print(unordered_set<T> v)
-{
-	cerr << "[ ";
-	for (T i : v)
-	{
-		_print(i);
-		cerr << " ";
-	}
-	cerr << "]";
-}
 
 template <typename T>
 vector<T> &operator--(vector<T> &v)
@@ -241,14 +175,6 @@ void umax(T &a, U b)
 		a = b;
 }
 
-#ifndef ONLINE_JUDGE
-#define debug(x)       \
-	cerr << #x << " "; \
-	_print(x);         \
-	cerr << endl;
-#else
-#define debug(x)
-#endif
 
 #define int long long
 
@@ -272,79 +198,17 @@ void umax(T &a, U b)
 
 
 
-template <typename T, class F = function<T(const T&, const T&)>>
-class SparseTable {
- public:
-  int n;
-  vector<vector<T>> mat;
-  F func;
- 
-  SparseTable(const vector<T>& a, const F& f) : func(f) {
-    n = static_cast<int>(a.size());
-    int max_log = 32 - __builtin_clz(n);
-    mat.resize(max_log);
-    mat[0] = a;
-    for (int j = 1; j < max_log; j++) {
-      mat[j].resize(n - (1 << j) + 1);
-      for (int i = 0; i <= n - (1 << j); i++) {
-        mat[j][i] = func(mat[j - 1][i], mat[j - 1][i + (1 << (j - 1))]);
-      }
-    }
-  }
- 
-  T get(int from, int to) const {
-    assert(0 <= from && from <= to && to <= n - 1);
-    int lg = 32 - __builtin_clz(to - from + 1) - 1;
-    return func(mat[lg][from], mat[lg][to - (1 << lg) + 1]);
-  }
-};
+
 
 void test(){
-	int n, k;
-    cin >> n >> k;
-    vector<int> a(n);
-    vector<bool> have(k);
-    for (int i = 0; i < n; i++) {
-      cin >> a[i];
-      --a[i];
-      have[a[i]] = true;
-    }
-    SparseTable<int> st(a, [&](int i, int j) { return max(i, j); });
-    vector<int> res(k);
-    for (int i = 0; i < k; i++) {
-      if (!have[i]) {
-        continue;
-      }
-      int L, R;
-      {
-        int low = 0, high = n - 1;
-        while (low < high) {
-          int mid = (low + high) >> 1;
-          if (st.get(0, mid) >= i) {
-            high = mid;
-          } else {
-            low = mid + 1;
-          }
+    vector<vector<int>> a(2 , vector<int>(2 , -1));
+    for (int i = 0 ; i < 2 ; i++){
+        for (int j = 0 ; j < 2 ; j++){
+            a[i][j] = j + i + 1;
         }
-        L = low;
-      }
-      {
-        int low = 0, high = n - 1;
-        while (low < high) {
-          int mid = (low + high) >> 1;
-          if (st.get(n - 1 - mid, n - 1) >= i) {
-            high = mid;
-          } else {
-            low = mid + 1;
-          }
-        }
-        R = n - 1 - low;
-      }
-      res[i] = (R - L + 1) * 2;
     }
-    for (int i = 0; i < k; i++) {
-      cout << res[i] << " \n"[i == k - 1];
-    }
+    debug(a);
+    cout << 90 << nline;
 }
 
 
@@ -355,10 +219,10 @@ void test(){
 
 
 
+
 int32_t main() {
-	lnx();
 	int t;
-    cin >> t;
+    t = 1;
     W(t){
 
 		test();
