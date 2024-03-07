@@ -188,105 +188,39 @@ template <typename T, typename U> void umax(T &a, U b) {
 }
 
 
-void remove(idx);  // TODO: remove value at idx from data structure
-void add(idx);     // TODO: add value at idx from data structure
-int get_answer();  // TODO: extract the current answer of the data structure
-
-int block_size;
-
-struct Query {
-    int l, r, idx;
-    bool operator<(Query other) const
-    {
-        return make_pair(l / block_size, r) <
-               make_pair(other.l / block_size, other.r);
-    }
-};
-
-vector<int> mo_s_algorithm(vector<Query> queries) {
-    vector<int> answers(queries.size());
-    sort(queries.begin(), queries.end());
-
-    // TODO: initialize data structure
-
-    int cur_l = 0;
-    int cur_r = -1;
-    // invariant: data structure will always reflect the range [cur_l, cur_r]
-    for (Query q : queries) {
-        while (cur_l > q.l) {
-            cur_l--;
-            add(cur_l);
-        }
-        while (cur_r < q.r) {
-            cur_r++;
-            add(cur_r);
-        }
-        while (cur_l < q.l) {
-            remove(cur_l);
-            cur_l++;
-        }
-        while (cur_r > q.r) {
-            remove(cur_r);
-            cur_r--;
-        }
-        answers[q.idx] = get_answer();
-    }
-    return answers;
-}
-
 
 void test() {
-    int n; cin >> n;
+    int n , x ; cin >> n >> x;
     vector<int> a(n);
     for (int i = 0 ; i < n ; i++){
         cin >> a[i];
     }
-    string s ; cin >> s;
-    int xor1 = 0, xor0 = 0;
-    for (int i = 0 ; i < n ; i++){
-        if(s[i] == '0'){
-            xor0 ^= a[i];
+    int low = 0 , high = 1e12;
+
+    while(low <= high){
+        int mid = low + (high - low) / 2;
+        int need = 0;
+        for (int i = 0 ; i < n ; i++){
+            if(a[i] < mid){
+                need += mid - a[i];
+            }
+        }
+
+        if(need == x){
+            cout << mid << nline;
+            return;
+        }
+        else if(need > x){
+            high = mid - 1;
         }
         else{
-            xor1 ^= a[i];
+            low = mid + 1;
         }
     }
 
-    vector<int> prefXor(n);
-    prefXor[0] = a[0];
-    for (int i = 1 ; i < n ; i++){
-        prefXor[i] = prefXor[i - 1] ^ a[i];
-    }
-    //debug(prefXor);
+    cout << high << nline;
 
 
-    int q ; cin >> q;
-    for (int i = 0 ; i < q ; i++){
-        int dx;
-        cin >> dx;
-        if(dx == 1){
-            int l , r ; cin >> l >> r;
-            l-- , r--;
-            if(l == 0){
-                xor1 ^= prefXor[r];
-                xor0 ^= prefXor[r];
-            }
-            else{
-                xor1 ^= prefXor[r] ^ prefXor[l - 1];
-                xor0 ^= prefXor[r] ^ prefXor[l - 1];
-            }
-        }
-        else{
-            int tx ; cin >> tx;
-            if(tx == 0){
-                cout << xor0 << " ";
-            }
-            else{
-                cout << xor1 << " ";
-            }
-        }
-    }
-    cout << nline;
 }
 
 
