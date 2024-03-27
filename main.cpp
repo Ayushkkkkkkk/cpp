@@ -10,9 +10,9 @@ using namespace chrono;
 const string RandString = "20257I0MPJMLKOQA";
 
 #define fastio()                                                               \
-    ios_base::sync_with_stdio(false);                                            \
-cin.tie(nullptr);                                                            \
-cout.tie(nullptr)
+  ios_base::sync_with_stdio(false);                                            \
+  cin.tie(nullptr);                                                            \
+  cout.tie(nullptr)
 #define LL long long
 #define LLD long double
 #define i64 int64_t
@@ -29,10 +29,10 @@ cout.tie(nullptr)
 #define lower(s1) transform(s1.begin(), s1.end(), s1.begin(), ::tolower);
 #define upper(s1) transform(s1.begin(), s1.end(), s1.begin(), ::toupper);
 #define getunique(v)                                                           \
-{                                                                            \
+  {                                                                            \
     sort(all(v));                                                              \
     v.erase(unique(all(v)), v.end());                                          \
-}
+  }
 #define vt vector
 #define decimal cout << fixed << setprecision(15);
 #define W(t) while (t--)
@@ -55,32 +55,32 @@ void __print(bool x) { cerr << (x ? "true" : "false"); }
 
 template <typename T, typename V> void __print(const pair<T, V> &x);
 template <typename T> void __print(const T &x) {
-    int f = 0;
-    cerr << '{';
-    for (auto &i : x)
-        cerr << (f++ ? ", " : ""), __print(i);
-    cerr << "}";
+  int f = 0;
+  cerr << '{';
+  for (auto &i : x)
+    cerr << (f++ ? ", " : ""), __print(i);
+  cerr << "}";
 }
 template <typename T, typename V> void __print(const pair<T, V> &x) {
-    cerr << '{';
-    __print(x.first);
-    cerr << ", ";
-    __print(x.second);
-    cerr << '}';
+  cerr << '{';
+  __print(x.first);
+  cerr << ", ";
+  __print(x.second);
+  cerr << '}';
 }
 void _print() { cerr << "]\n"; }
 template <typename T, typename... V> void _print(T t, V... v) {
-    __print(t);
-    if (sizeof...(v))
-        cerr << ", ";
-    _print(v...);
+  __print(t);
+  if (sizeof...(v))
+    cerr << ", ";
+  _print(v...);
 }
 
 #ifdef DEBUG
 #define debug(x...)                                                            \
-    cerr << "\e[91m" << __func__ << ":" << __LINE__ << " [" << #x << "] = [";    \
-    _print(x);                                                                   \
-    cerr << "\e[39m" << endl;
+  cerr << "\e[91m" << __func__ << ":" << __LINE__ << " [" << #x << "] = [";    \
+  _print(x);                                                                   \
+  cerr << "\e[39m" << endl;
 #else
 #define debug(x...)
 #endif
@@ -96,7 +96,7 @@ template <typename T, typename... V> void _print(T t, V... v) {
 #define uppb(a, x) (upper_bound((a).begin(), (a).end(), (x)) - (a).begin())
 
 #define F_OR(i, a, b, s)                                                       \
-    for (int i = (a); (s) > 0 ? i < (b) : i > (b); i += (s))
+  for (int i = (a); (s) > 0 ? i < (b) : i > (b); i += (s))
 #define F_OR1(e) F_OR(i, 0, e, 1)
 #define F_OR2(i, e) F_OR(i, 0, e, 1)
 #define F_OR3(i, b, e) F_OR(i, b, e, 1)
@@ -111,158 +111,140 @@ typedef unsigned long long ull;
 typedef long double lld;
 
 ll FIRSTTRUE(function<bool(ll)> f, ll lb, ll rb) {
-    while (lb < rb) {
-        ll mb = (lb + rb) / 2;
-        f(mb) ? rb = mb : lb = mb + 1;
-    }
-    return lb;
+  while (lb < rb) {
+    ll mb = (lb + rb) / 2;
+    f(mb) ? rb = mb : lb = mb + 1;
+  }
+  return lb;
 }
 ll LASTTRUE(function<bool(ll)> f, ll lb, ll rb) {
-    while (lb < rb) {
-        ll mb = (lb + rb + 1) / 2;
-        f(mb) ? lb = mb : rb = mb - 1;
-    }
-    return lb;
+  while (lb < rb) {
+    ll mb = (lb + rb + 1) / 2;
+    f(mb) ? lb = mb : rb = mb - 1;
+  }
+  return lb;
 }
 
 // typedef tree<int, null_type, less<int>, rb_tree_tag,
 // tree_order_statistics_node_update> pbds;
 template <typename T = int>
 using ordered_set =
-tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
+    tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
 
 template <typename T> vector<T> &operator--(vector<T> &v) {
-    for (auto &i : v)
-        --i;
-    return v;
+  for (auto &i : v)
+    --i;
+  return v;
 }
 template <typename T> vector<T> &operator++(vector<T> &v) {
-    for (auto &i : v)
-        ++i;
-    return v;
+  for (auto &i : v)
+    ++i;
+  return v;
 }
 template <typename T> istream &operator>>(istream &is, vector<T> &v) {
-    for (auto &i : v)
-        is >> i;
-    return is;
+  for (auto &i : v)
+    is >> i;
+  return is;
 }
 template <typename T> ostream &operator<<(ostream &os, vector<T> v) {
-    for (auto &i : v)
-        os << i << ' ';
-    return os;
+  for (auto &i : v)
+    os << i << ' ';
+  return os;
 }
 template <typename T, typename U> pair<T, U> &operator--(pair<T, U> &p) {
-    --p.first;
-    --p.second;
-    return p;
+  --p.first;
+  --p.second;
+  return p;
 }
 template <typename T, typename U> pair<T, U> &operator++(pair<T, U> &p) {
-    ++p.first;
-    ++p.second;
-    return p;
+  ++p.first;
+  ++p.second;
+  return p;
 }
 template <typename T, typename U>
 istream &operator>>(istream &is, pair<T, U> &p) {
-    is >> p.first >> p.second;
-    return is;
+  is >> p.first >> p.second;
+  return is;
 }
 template <typename T, typename U>
 ostream &operator<<(ostream &os, pair<T, U> p) {
-    os << p.first << ' ' << p.second;
-    return os;
+  os << p.first << ' ' << p.second;
+  return os;
 }
 template <typename T, typename U>
 pair<T, U> operator-(pair<T, U> a, pair<T, U> b) {
-    return mp(a.first - b.first, a.second - b.second);
+  return mp(a.first - b.first, a.second - b.second);
 }
 template <typename T, typename U>
 pair<T, U> operator+(pair<T, U> a, pair<T, U> b) {
-    return mp(a.first + b.first, a.second + b.second);
+  return mp(a.first + b.first, a.second + b.second);
 }
 template <typename T, typename U> void umin(T &a, U b) {
-    if (a > b)
-        a = b;
+  if (a > b)
+    a = b;
 }
 template <typename T, typename U> void umax(T &a, U b) {
-    if (a < b)
-        a = b;
+  if (a < b)
+    a = b;
 }
 
+struct Edge {
+  int u, v, weight;
+  bool operator<(Edge const &other) { return weight < other.weight; }
+};
 
-const int N =200003;
-const int bits=30;
-int pref[N][bits];
-int a[N];
-void Buildprefix(int n){ //Builds the prefix sums for each bit
-    for(int i=0; i< n; i++){
-        for(int j=0; j<30; j++){
-            if(a[i]&(1<<j)){
-                pref[i+1][j]=pref[i][j]+1;
-            }
-            else{
-                pref[i+1][j]=pref[i][j];
-            }
-        }
+int n;
+vector<Edge> edges;
+
+int cost = 0;
+vector<int> tree_id(n);
+vector<Edge> result;
+for (int i = 0; i < n; i++)
+  tree_id[i] = i;
+
+sort(edges.begin(), edges.end());
+
+for (Edge e : edges) {
+  if (tree_id[e.u] != tree_id[e.v]) {
+    cost += e.weight;
+    result.push_back(e);
+
+    int old_id = tree_id[e.u], new_id = tree_id[e.v];
+    for (int i = 0; i < n; i++) {
+      if (tree_id[i] == old_id)
+        tree_id[i] = new_id;
     }
+  }
 }
 
+const int M = 1010;
+int n;
+string A[M];
 
 void test() {
-    int n;
-    cin >> n;
-    for(int i=0; i< n; i++){
-        cin >> a[i];
+  cin >> n;
+  for (int i = 0; i < n; i++) {
+    cin >> A[i];
+  }
+
+  int ans = 0;
+  for (int i = 0; i * 2 < n; ++i) {
+    for (int j = 0; j * 2 < n; ++j) {
+      vector<char> MX{A[i][j], A[n - 1 - j][i], A[n - 1 - i][n - 1 - j],
+                      A[j][n - 1 - i]};
+      char c = *max_element(MX.begin(), MX.end());
+      for (char e : MX) {
+        ans += c - e;
+      }
     }
-    Buildprefix(n);
-    int q;
-    cin >> q;
-    while(q--){
-        int l, k;
-        cin >> l >> k;
-        if(a[l-1]<k){
-            cout << -1 << " ";
-            continue;
-        }
-        int lo=l;
-        int hi=n;
-        int ans=l;
-        while(lo<=hi){
-            int s=(lo+hi)/2;
-            int num=0;
-            for(int j=0; j< bits; j++){
-                if(pref[s][j]-pref[l-1][j]==s-l+1){
-                    num+=(1<<j);
-                }
-            }
-            if(num>=k){
-                lo=s+1;
-                ans=max(ans, s);
-            }
-            else hi=s-1;
-        }
-        cout << ans <<" ";
-    }
-    cout << nline;
+  }
+  cout << ans << nline;
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 int32_t main() {
-    fastio();
-    int t;
-    cin >> t;
-    W(t) { test(); }
+  fastio();
+  int t;
+  cin >> t;
+  W(t) { test(); }
 }
-
-
 
