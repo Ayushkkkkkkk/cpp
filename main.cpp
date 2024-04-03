@@ -1,13 +1,27 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <array>
+#include <bitset>
+#include <cassert>
+#include <chrono>
+#include <cmath>
 #include <cstdint>
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
+#include <cstring>
+#include <ctime>
+#include <functional>
+#include <iomanip>
+#include <iostream>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <random>
+#include <set>
+#include <vector>
 
 using namespace std;
-using namespace __gnu_pbds;
-using namespace chrono;
+// using namespace __gnu_pbds;
+// using namespace chrono;
 
-const string RandString = "20257I0MPJMLKOQA";
+// const string RandString = "20257I0MPJMLKOQA";
 
 #define fastio()                                                               \
   ios_base::sync_with_stdio(false);                                            \
@@ -127,9 +141,9 @@ ll LASTTRUE(function<bool(ll)> f, ll lb, ll rb) {
 
 // typedef tree<int, null_type, less<int>, rb_tree_tag,
 // tree_order_statistics_node_update> pbds;
-template <typename T = int>
-using ordered_set =
-    tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
+// template <typename T = int>
+// using ordered_set =tree<T, null_type, less<T>, rb_tree_tag,
+// tree_order_statistics_node_update>;
 
 template <typename T> vector<T> &operator--(vector<T> &v) {
   for (auto &i : v)
@@ -188,57 +202,93 @@ template <typename T, typename U> void umax(T &a, U b) {
     a = b;
 }
 
-struct Edge {
-  int u, v, weight;
-  bool operator<(Edge const &other) { return weight < other.weight; }
-};
+template <class Fun> class y_combinator_result {
+  Fun fun_;
 
-int n;
-vector<Edge> edges;
-
-int cost = 0;
-vector<int> tree_id(n);
-vector<Edge> result;
-for (int i = 0; i < n; i++)
-  tree_id[i] = i;
-
-sort(edges.begin(), edges.end());
-
-for (Edge e : edges) {
-  if (tree_id[e.u] != tree_id[e.v]) {
-    cost += e.weight;
-    result.push_back(e);
-
-    int old_id = tree_id[e.u], new_id = tree_id[e.v];
-    for (int i = 0; i < n; i++) {
-      if (tree_id[i] == old_id)
-        tree_id[i] = new_id;
-    }
+public:
+  template <class T>
+  explicit y_combinator_result(T &&fun) : fun_(std::forward<T>(fun)) {}
+  template <class... Args> decltype(auto) operator()(Args &&...args) {
+    return fun_(std::ref(*this), std::forward<Args>(args)...);
   }
+};
+template <class Fun> decltype(auto) y_combinator(Fun &&fun) {
+  return y_combinator_result<std::decay_t<Fun>>(std::forward<Fun>(fun));
 }
 
-const int M = 1010;
-int n;
-string A[M];
+//----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 void test() {
+  int n;
   cin >> n;
+  set<int> UNION;
+  vector<vector<int>> vec;
+  set<set<int>> U;
   for (int i = 0; i < n; i++) {
-    cin >> A[i];
+    int k;
+    cin >> k;
+    vector<int> dx;
+    set<int> Z;
+    for (int j = 0; j < k; j++) {
+      int dy;
+      cin >> dy;
+      dx.push_back(dy);
+      UNION.insert(dy);
+      Z.insert(dy);
+    }
+    U.insert(Z);
+    vec.push_back(dx);
   }
+  int mx = 0;
+  vector<int> Union;
+  for (auto it = UNION.begin(); it != UNION.end(); it++) {
+    int elem = *it;
+    Union.push_back(elem);
+  }
+  vector<vector<int>> X;
+  for (const auto &inner_set : U) {
+    vector<int> x;
+    for (const auto &element : inner_set) {
+      x.push_back(element);
+    }
+    X.push_back(x);
+  }
+  vector<vector<int>> f(100, vector<int>(100, 0));
 
-  int ans = 0;
-  for (int i = 0; i * 2 < n; ++i) {
-    for (int j = 0; j * 2 < n; ++j) {
-      vector<char> MX{A[i][j], A[n - 1 - j][i], A[n - 1 - i][n - 1 - j],
-                      A[j][n - 1 - i]};
-      char c = *max_element(MX.begin(), MX.end());
-      for (char e : MX) {
-        ans += c - e;
+  for (int i = 0; i < Union.size(); i++) {
+    int elem = Union[i];
+    for (int j = 0; j < X.size(); j++) {
+      for (int k = 0; k < X[j].size(); k++) {
+        if (X[j][k] == elem) {
+          f[j][elem] += 1;
+        }
       }
     }
   }
-  cout << ans << nline;
+  for (int i = 0; i < Union.size(); i++) {
+    int elem = Union[i];
+    vector<vector<int>> temp = f;
+    vector<int> li;
+    set<int> ans;
+    for (int j = 0; j <= 50; j++) {
+      int ct = 0;
+      for (int k = 0; k <= 50; k++) {
+        if (f[j][elem] >= 1) {
+          // debug(f[j][elem], j);
+          continue;
+        } else {
+          ct += f[j][k];
+          if (f[j][k]) {
+            ans.insert(k);
+          }
+        }
+      }
+      // debug(ans, elem);
+      int DX = ans.size();
+      mx = max(mx, DX);
+    }
+  }
+  cout << mx << nline;
 }
 
 int32_t main() {
